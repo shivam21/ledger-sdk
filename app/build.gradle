@@ -54,6 +54,11 @@ android {
 dependencies {
 
     implementation project(path: ':lib-ledger')
+
+    implementation 'com.github.Dehaat:clean-arch-base:0.0.1'
+    implementation 'com.github.Dehaat:dehaat-android-base:v0.0.2-beta-6'
+//    implementation 'com.github.ankur-singh-dehaat:ledger-sdk:v0.1-alpha-3'
+
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
 

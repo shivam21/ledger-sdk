@@ -1,4 +1,4 @@
-package lib.dehaat.ledger.di
+package com.dehaat.ledger
 
 import com.dehaat.androidbase.coroutine.Dispatchers
 import com.dehaat.androidbase.coroutine.IDispatchers
@@ -13,15 +13,7 @@ import lib.dehaat.ledger.data.source.ILedgerDataSource
 import lib.dehaat.ledger.domain.ILedgerRepository
 import lib.dehaat.ledger.framework.network.LedgerAPIService
 import lib.dehaat.ledger.framework.network.LedgerDataSource
-import okhttp3.Dispatcher
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

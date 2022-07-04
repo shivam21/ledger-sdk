@@ -32,6 +32,8 @@ class AppChooserActivity : AppCompatActivity() {
                             showToast(creditSummaryViewData.toString())
                         }
 
+
+
                         override fun onClickDownloadInvoice(invoiceDetailDataViewData: InvoiceDetailDataViewData?) {
                             showToast(invoiceDetailDataViewData.toString())
                         }
