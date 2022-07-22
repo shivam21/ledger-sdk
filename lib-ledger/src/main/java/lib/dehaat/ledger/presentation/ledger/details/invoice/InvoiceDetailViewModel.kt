@@ -97,7 +97,6 @@ class InvoiceDetailViewModel @Inject constructor(
         invoiceDownloadStatus: (InvoiceDownloadData) -> Unit
     ) = callInViewModelScope {
         invoiceDownloadData.apply {
-            filePath = downloadDirectory.path
             partnerId = ledgerId
             invoiceId = erpId.toString()
         }
@@ -134,6 +133,7 @@ class InvoiceDetailViewModel @Inject constructor(
                             fileName = identityId,
                             dir = downloadDirectory
                         )?.let {
+                            invoiceDownloadData.filePath = "${downloadDirectory.path}/${identityId.substringAfterLast('$')}.pdf"
                             invoiceDownloadStatus(invoiceDownloadData)
                         } ?: kotlin.run {
                             invoiceDownloadData.isFailed = true
@@ -175,6 +175,7 @@ class InvoiceDetailViewModel @Inject constructor(
                 override fun onStateChanged(id: Int, state: TransferState?) {
                     if (state == TransferState.COMPLETED) {
                         updateProgressDialog(false)
+                        invoiceDownloadData.filePath = "${downloadDirectory.path}/${identityId.substringAfterLast('$')}.pdf"
                         invoiceDownloadStatus(invoiceDownloadData)
                     }
                 }
