@@ -28,7 +28,6 @@ import lib.dehaat.ledger.framework.model.detail.creditnote.Summary
 import lib.dehaat.ledger.framework.model.detail.invoice.InvoiceDetailData
 import lib.dehaat.ledger.framework.model.detail.invoice.Loan
 import lib.dehaat.ledger.framework.model.detail.invoice.invoicedownload.DownloadInvoiceData
-import lib.dehaat.ledger.framework.model.detail.invoice.invoicedownload.ResponseDownloadInvoice
 import lib.dehaat.ledger.framework.model.detail.payment.PaymentDetailData
 import lib.dehaat.ledger.framework.model.transactions.Transaction
 import lib.dehaat.ledger.framework.model.transactions.TransactionsData
