@@ -1,17 +1,15 @@
 package lib.dehaat.ledger.datasource
 
 import android.content.Context
-import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
+import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.LedgerParentApp
 import lib.dehaat.ledger.initializer.LedgerSDK
-import lib.dehaat.ledger.initializer.callbacks.LedgerCallbacks
+import lib.dehaat.ledger.initializer.callbacks.LedgerCallBack
 import lib.dehaat.ledger.presentation.model.creditlines.CreditLineViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.CreditSummaryViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.CreditViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.InfoViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.OverdueViewData
-import lib.dehaat.ledger.presentation.model.invoicedownload.InvoiceDownloadData
 import lib.dehaat.ledger.presentation.model.transactions.TransactionViewData
 
 object DummyDataSource {
@@ -80,50 +78,28 @@ object DummyDataSource {
     }
     private val dbaApp by lazy {
         LedgerParentApp.DBA(
-            ledgerCallBack = object : LedgerCallbacks {
-                override fun onClickPayNow(
-                    creditSummaryViewData: CreditSummaryViewData?
-                ) = Unit
-
-                override fun onClickDownloadInvoice(
-                    invoiceDownloadData: InvoiceDownloadData
-                ) = Unit
-
-                override fun onPaymentOptionsClick(
-                    creditSummaryViewData: CreditSummaryViewData?,
-                    resultLauncher: ActivityResultLauncher<Intent?>
-                ) = Unit
-            }
+            ledgerCallBack = LedgerCallBack({}, {}, { _, _ -> }, { context, path -> null }
+            )
         )
     }
     private val aimsApp by lazy {
         LedgerParentApp.AIMS(
-            ledgerCallBack = object : LedgerCallbacks {
-                override fun onClickPayNow(
-                    creditSummaryViewData: CreditSummaryViewData?
-                ) = Unit
-
-                override fun onClickDownloadInvoice(
-                    invoiceDownloadData: InvoiceDownloadData
-                ) = Unit
-
-                override fun onPaymentOptionsClick(
-                    creditSummaryViewData: CreditSummaryViewData?,
-                    resultLauncher: ActivityResultLauncher<Intent?>
-                ) = Unit
-            }
+            downloadInvoiceClick = {},
+            downloadInvoiceIntent = { context, path -> null }
         )
     }
 
     fun initDBA(context: Context) = LedgerSDK.init(
         context,
         dbaApp,
-        "bucket"
+        "bucket",
+        R.drawable.ic_info_icon
     )
 
     fun initAIMS(context: Context) = LedgerSDK.init(
         context,
         aimsApp,
-        "bucket"
+        "bucket",
+        R.drawable.ic_info_icon
     )
 }

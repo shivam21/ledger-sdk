@@ -1,21 +1,32 @@
 package lib.dehaat.ledger.initializer
 
-import lib.dehaat.ledger.initializer.callbacks.LedgerCallbacks
+import lib.dehaat.ledger.initializer.callbacks.DownloadInvoiceClick
+import lib.dehaat.ledger.initializer.callbacks.DownloadInvoiceIntent
+import lib.dehaat.ledger.initializer.callbacks.LedgerCallBack
 import lib.dehaat.ledger.initializer.themes.AIMSColors
 import lib.dehaat.ledger.initializer.themes.DBAColors
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 
 sealed class LedgerParentApp(
-    val ledgerCallBack: LedgerCallbacks,
+    val ledgerCallBack: LedgerCallBack,
     val ledgerColors: LedgerColors
 ) {
     class AIMS(
-        ledgerCallBack: LedgerCallbacks,
+        downloadInvoiceClick: DownloadInvoiceClick,
+        downloadInvoiceIntent: DownloadInvoiceIntent,
         ledgerColors: LedgerColors = AIMSColors()
-    ) : LedgerParentApp(ledgerCallBack, ledgerColors)
+    ) : LedgerParentApp(
+        LedgerCallBack(
+            onClickPayNow = {},
+            onClickDownloadInvoice = downloadInvoiceClick,
+            onPaymentOptionsClick = { _, _ -> },
+            downloadInvoiceIntent = downloadInvoiceIntent
+        ),
+        ledgerColors
+    )
 
     class DBA(
-        ledgerCallBack: LedgerCallbacks,
+        ledgerCallBack: LedgerCallBack,
         ledgerColors: LedgerColors = DBAColors()
     ) : LedgerParentApp(
         ledgerCallBack,

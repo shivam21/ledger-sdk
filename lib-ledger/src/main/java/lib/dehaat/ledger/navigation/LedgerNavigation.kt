@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import lib.dehaat.ledger.initializer.callbacks.LedgerCallbacks
+import lib.dehaat.ledger.initializer.callbacks.LedgerCallBack
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.presentation.LedgerConstants
 import lib.dehaat.ledger.presentation.LedgerDetailViewModel
@@ -21,15 +21,17 @@ import lib.dehaat.ledger.presentation.ledger.details.invoice.ui.InvoiceDetailScr
 import lib.dehaat.ledger.presentation.ledger.details.payments.PaymentDetailViewModel
 import lib.dehaat.ledger.presentation.ledger.details.payments.ui.PaymentDetailScreen
 import lib.dehaat.ledger.presentation.ledger.ui.LedgerDetailScreen2
+import lib.dehaat.ledger.presentation.model.invoicedownload.InvoiceDownloadData
 
 @Composable
 fun LedgerNavigation(
     dcName: String,
     partnerId: String,
     ledgerColors: LedgerColors,
-    ledgerCallbacks: LedgerCallbacks?,
+    ledgerCallbacks: LedgerCallBack,
     resultLauncher: ActivityResultLauncher<Intent?>,
     viewModel: LedgerDetailViewModel,
+    onDownloadClick: (InvoiceDownloadData) -> Unit,
     finishActivity: () -> Unit
 ) {
 
@@ -60,10 +62,10 @@ fun LedgerNavigation(
                     viewModel.isLMSActivated()
                 },
                 onPayNowClick = {
-                    ledgerCallbacks?.onClickPayNow(viewModel.uiState.value.creditSummaryViewData)
+                    ledgerCallbacks.onClickPayNow(viewModel.uiState.value.creditSummaryViewData)
                 },
                 onPaymentOptionsClick = {
-                    ledgerCallbacks?.onPaymentOptionsClick(
+                    ledgerCallbacks.onPaymentOptionsClick(
                         viewModel.uiState.value.creditSummaryViewData,
                         resultLauncher
                     )
@@ -90,7 +92,7 @@ fun LedgerNavigation(
                     type = NavType.StringType
                 },
 
-            )
+                )
         ) {
 
             val erpId = it.arguments?.get(LedgerConstants.KEY_ERP_ID) as String?
@@ -105,9 +107,8 @@ fun LedgerNavigation(
                 ledgerColors = ledgerColors,
                 onBackPress = {
                     navController.popBackStack()
-                }, onDownloadInvoiceClick = { invoiceDownloadStatus ->
-                    ledgerCallbacks?.onClickDownloadInvoice(invoiceDownloadStatus)
-                }
+                },
+                onDownloadInvoiceClick = onDownloadClick
             )
 
         }

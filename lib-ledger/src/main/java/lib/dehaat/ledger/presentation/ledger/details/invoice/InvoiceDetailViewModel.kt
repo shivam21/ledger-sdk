@@ -25,6 +25,7 @@ import lib.dehaat.ledger.presentation.common.UiEvent
 import lib.dehaat.ledger.presentation.ledger.details.invoice.state.InvoiceDetailViewModelState
 import lib.dehaat.ledger.presentation.mapper.LedgerViewDataMapper
 import lib.dehaat.ledger.presentation.model.invoicedownload.InvoiceDownloadData
+import lib.dehaat.ledger.presentation.model.invoicedownload.ProgressData
 import lib.dehaat.ledger.presentation.processAPIResponseWithFailureSnackBar
 import lib.dehaat.ledger.util.DownloadFileUtil
 import lib.dehaat.ledger.util.FileUtils
@@ -96,10 +97,7 @@ class InvoiceDetailViewModel @Inject constructor(
         downloadDirectory: File,
         invoiceDownloadStatus: (InvoiceDownloadData) -> Unit
     ) = callInViewModelScope {
-        invoiceDownloadData.apply {
-            partnerId = ledgerId
-            invoiceId = erpId.toString()
-        }
+        invoiceDownloadData.partnerId = ledgerId
         val identityId = when (source) {
             "SAP" -> erpId?.substringAfterLast('$')
             "ODOO" -> erpId
@@ -133,7 +131,7 @@ class InvoiceDetailViewModel @Inject constructor(
                             fileName = identityId,
                             dir = downloadDirectory
                         )?.let {
-                            invoiceDownloadData.filePath = "${downloadDirectory.path}/${identityId.substringAfterLast('$')}.pdf"
+                            updateDownloadPathAndProgress(downloadDirectory, identityId)
                             invoiceDownloadStatus(invoiceDownloadData)
                         } ?: kotlin.run {
                             invoiceDownloadData.isFailed = true
@@ -175,16 +173,21 @@ class InvoiceDetailViewModel @Inject constructor(
                 override fun onStateChanged(id: Int, state: TransferState?) {
                     if (state == TransferState.COMPLETED) {
                         updateProgressDialog(false)
-                        invoiceDownloadData.filePath = "${downloadDirectory.path}/${identityId.substringAfterLast('$')}.pdf"
+                        updateDownloadPathAndProgress(downloadDirectory, identityId)
                         invoiceDownloadStatus(invoiceDownloadData)
                     }
                 }
 
-                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) = Unit
+                override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+                    invoiceDownloadData.progressData =
+                        ProgressData(bytesCurrent.toInt(), bytesTotal.toInt())
+                    invoiceDownloadStatus(invoiceDownloadData)
+                }
 
                 override fun onError(id: Int, ex: Exception?) {
                     ex?.printStackTrace()
                     invoiceDownloadData.isFailed = true
+                    updateDownloadPathAndProgress(downloadDirectory, identityId)
                     invoiceDownloadStatus(invoiceDownloadData)
                     updateProgressDialog(false)
                 }
@@ -202,5 +205,11 @@ class InvoiceDetailViewModel @Inject constructor(
         viewModelState.update {
             it.copy(isLoading = true)
         }
+    }
+
+    private fun updateDownloadPathAndProgress(file: File, id: String) = invoiceDownloadData.apply {
+        filePath = "${file.path}/${id.substringAfterLast('$')}.pdf"
+        progressData = ProgressData()
+        invoiceId = id.substringAfterLast('$')
     }
 }
