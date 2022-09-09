@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 
 @OptIn(ExperimentalPagerApi::class)
@@ -22,7 +24,7 @@ fun Tabs(pagerState: PagerState, ledgerColors: LedgerColors, onClickTab: (index:
         when (currentPage) {
             1 -> {
                 TabDefault(
-                    label = "Transactions",
+                    label = stringResource(R.string.transactions),
                     modifier = modifier
                         .padding(end = 8.dp)
                         .clickable {
@@ -31,7 +33,7 @@ fun Tabs(pagerState: PagerState, ledgerColors: LedgerColors, onClickTab: (index:
                     ledgerColors = ledgerColors
                 )
                 TabSelected(
-                    label = "Credits",
+                    label = stringResource(R.string.credits),
                     modifier = modifier
                         .padding(start = 8.dp)
                         .clickable {
@@ -42,7 +44,7 @@ fun Tabs(pagerState: PagerState, ledgerColors: LedgerColors, onClickTab: (index:
             }
             else -> {
                 TabSelected(
-                    label = "Transactions",
+                    label = stringResource(id = R.string.transactions),
                     modifier = modifier
                         .padding(end = 8.dp)
                         .clickable {
@@ -51,7 +53,7 @@ fun Tabs(pagerState: PagerState, ledgerColors: LedgerColors, onClickTab: (index:
                     ledgerColors = ledgerColors
                 )
                 TabDefault(
-                    label = "Credits",
+                    label = stringResource(id = R.string.credits),
                     modifier = modifier
                         .padding(start = 8.dp)
                         .clickable {

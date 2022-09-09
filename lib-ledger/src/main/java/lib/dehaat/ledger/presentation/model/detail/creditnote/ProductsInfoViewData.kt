@@ -5,5 +5,5 @@ data class ProductsInfoViewData(
     val gst: String,
     val itemTotal: String,
     val subTotal: String,
-    val productList: List<ProductViewData>
+    val productList: List<ProductViewData>?
 )

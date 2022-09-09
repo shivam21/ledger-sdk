@@ -11,12 +11,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.themes.AIMSColors
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.resources.textMedium16Sp
@@ -52,9 +54,10 @@ fun PayNowButton(
             )
             .padding(vertical = 8.dp, horizontal = 32.dp),
         text = buildAnnotatedString {
-            append("Pay Now")
+            append(stringResource(R.string.pay_now_text))
             pushStyle(style = SpanStyle(fontSize = 12.sp))
-            append("\nUsing this App")
+            append("\n")
+            append(stringResource(id = R.string.using_this_app))
         },
         style = textMedium16Sp(textColor = Color.White),
         textAlign = TextAlign.Center

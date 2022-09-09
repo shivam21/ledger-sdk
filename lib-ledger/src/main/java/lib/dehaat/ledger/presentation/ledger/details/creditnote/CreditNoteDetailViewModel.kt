@@ -1,5 +1,6 @@
 package lib.dehaat.ledger.presentation.ledger.details.creditnote
 
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.cleanarch.base.entity.result.api.APIResultEntity
@@ -16,13 +17,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import lib.dehaat.ledger.domain.usecases.GetCreditNoteDetailUseCase
 import lib.dehaat.ledger.entities.detail.creditnote.CreditNoteDetailEntity
-import lib.dehaat.ledger.presentation.LedgerConstants.KEY_ERP_ID
 import lib.dehaat.ledger.presentation.LedgerConstants.KEY_LEDGER_ID
-import lib.dehaat.ledger.presentation.LedgerConstants.KEY_LOCUS_ID
 import lib.dehaat.ledger.presentation.common.BaseViewModel
 import lib.dehaat.ledger.presentation.common.UiEvent
 import lib.dehaat.ledger.presentation.ledger.details.creditnote.state.CreditNoteDetailViewModelState
 import lib.dehaat.ledger.presentation.mapper.LedgerViewDataMapper
+import lib.dehaat.ledger.presentation.model.transactions.TransactionViewData
 import lib.dehaat.ledger.util.processAPIResponseWithFailureSnackBar
 
 @HiltViewModel
@@ -37,10 +37,6 @@ class CreditNoteDetailViewModel @Inject constructor(
             "Ledger id should not null"
         )
     }
-
-    private val locusId by lazy { savedStateHandle.get<String>(KEY_LOCUS_ID) }
-
-    private val erpId by lazy { savedStateHandle.get<String>(KEY_ERP_ID) }
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent: SharedFlow<UiEvent> get() = _uiEvent
@@ -60,9 +56,9 @@ class CreditNoteDetailViewModel @Inject constructor(
 
     private fun getCreditNoteDetailFromServer() {
         callInViewModelScope {
-            callingAPI()
+            updateProgressDialog(true)
             val response = getCreditNoteDetailUseCase.invoke(ledgerId)
-            calledAPI()
+            updateProgressDialog(false)
             processCreditNoteDetailResponse(response)
         }
     }
@@ -80,20 +76,23 @@ class CreditNoteDetailViewModel @Inject constructor(
     }
 
     private fun sendShowSnackBarEvent(message: String) {
+        updateAPIFailure()
         viewModelScope.launch {
             _uiEvent.emit(UiEvent.ShowSnackbar(message))
         }
     }
 
-    private fun calledAPI() {
-        viewModelState.update {
-            it.copy(isLoading = false)
-        }
+    private fun updateAPIFailure() = viewModelState.update {
+        it.copy(isError = true)
     }
 
-    private fun callingAPI() {
-        viewModelState.update {
-            it.copy(isLoading = true)
+    fun updateProgressDialog(show: Boolean) = viewModelState.update {
+        it.copy(isLoading = show)
+    }
+
+    companion object {
+        fun getArgs(data: TransactionViewData) = Bundle().apply {
+            putString(KEY_LEDGER_ID, data.ledgerId)
         }
     }
 }

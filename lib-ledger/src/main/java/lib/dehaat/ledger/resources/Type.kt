@@ -8,6 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -243,4 +244,331 @@ fun text12Sp(
     lineHeight = lineHeight,
     fontWeight = fontWeight,
     color = textColor,
+)
+
+/**
+ * Font Styles derived from https://www.figma.com/file/rRPSy4h3oe4aDuBSOJbbG2/F.A.D.S.---Base-Style?node-id=4%3A2
+ */
+
+@Composable
+fun textHeadingH1(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 32.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 40.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration
+)
+
+@Composable
+fun textHeadingH2(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 32.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 40.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration
+)
+
+@Composable
+fun textHeadingH3(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 24.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 32.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textHeadingH4(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 24.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 32.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textHeadingH5(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 20.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 28.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textHeadingH6(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 20.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 28.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textSubHeadingS1(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 18.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 24.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textSubHeadingS2(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 18.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 24.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textSubHeadingS3(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 24.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textParagraphT1(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    lineHeight: TextUnit = 24.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansRegular
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textParagraphT1Highlight(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 24.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textParagraphT2(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 14.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    lineHeight: TextUnit = 20.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansRegular
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    fontFamily = fontFamily,
+    textDecoration = textDecoration
+)
+
+@Composable
+fun textParagraphT2Highlight(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 14.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 20.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textParagraphT3(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 12.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    lineHeight: TextUnit = 16.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansRegular
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textParagraphT3Highlight(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 12.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 16.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textButtonB1(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 20.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textButtonB2(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 14.sp,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 18.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansSemiBold
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textCaptionCP1(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 12.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 16.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
+)
+
+@Composable
+fun textCaptionCP2(
+    textColor: Color = TextBlack,
+    fontSize: TextUnit = 10.sp,
+    fontWeight: FontWeight = FontWeight.Medium,
+    lineHeight: TextUnit = 14.sp,
+    textDecoration: TextDecoration? = null,
+    fontFamily: FontFamily = notoSansDisplayMedium
+) = TextStyle(
+    color = textColor,
+    fontSize = fontSize,
+    fontWeight = fontWeight,
+    lineHeight = lineHeight,
+    textDecoration = textDecoration,
+    fontFamily = fontFamily
 )

@@ -1,34 +1,68 @@
 package lib.dehaat.ledger.initializer
 
 import android.content.Context
-import android.content.Intent
+import android.os.Environment
 import androidx.annotation.DrawableRes
 import com.facebook.drawee.backends.pipeline.Fresco
-import lib.dehaat.ledger.presentation.LedgerConstants
+import java.io.File
 import lib.dehaat.ledger.presentation.ledger.LedgerDetailActivity
 
 object LedgerSDK {
-    lateinit var currentApp: LedgerParentApp
-    lateinit var bucket: String
-    var appIcon: Int = 0
+    internal lateinit var currentApp: LedgerParentApp
+    internal lateinit var bucket: String
+    internal var locale: String = "en"
+    internal var appIcon: Int = 0
         private set
 
-    fun init(context: Context, app: LedgerParentApp, bucket: String, @DrawableRes appIcon: Int) {
+    fun init(
+        context: Context,
+        app: LedgerParentApp,
+        bucket: String,
+        @DrawableRes appIcon: Int,
+        debugMode: Boolean
+    ) {
         currentApp = app
         this.bucket = bucket
         this.appIcon = appIcon
+        this.isDebug = debugMode
         Fresco.initialize(context)
     }
 
     fun isCurrentAppAvailable() = ::currentApp.isInitialized && ::bucket.isInitialized
 
-    fun openLedger(context: Context, partnerId: String, dcName: String) {
-        context.startActivity(
-            Intent(context, LedgerDetailActivity::class.java).apply {
-                this.putExtra(LedgerConstants.KEY_PARTNER_ID, partnerId)
-                this.putExtra(LedgerConstants.KEY_DC_NAME, dcName)
-            }
-        )
+    @Throws(Exception::class)
+    fun openLedger(
+        context: Context,
+        partnerId: String,
+        dcName: String,
+        isDCFinanced: Boolean,
+        language: String? = null
+    ) = if (isCurrentAppAvailable()) {
+        LedgerDetailActivity.Companion.Args(
+            partnerId = partnerId,
+            dcName = dcName,
+            isDCFinanced = isDCFinanced,
+            language = language
+        ).also {
+            language?.let { lang -> locale = lang }
+            context.startActivity(it.build(context))
+        }
+    } else {
+        throw Exception("Ledger not initialised Exception")
+    }
+
+    fun getFile(context: Context): File? = try {
+        File(
+            context.getExternalFilesDir(
+                Environment.DIRECTORY_DOWNLOADS
+            ),
+            "DeHaat"
+        ).apply { mkdir() }
+    } catch (e: Exception) {
+        if (::currentApp.isInitialized) {
+            currentApp.ledgerCallBack.exceptionHandler(e)
+        }
+        null
     }
 
     val isDBA: Boolean
@@ -36,4 +70,7 @@ object LedgerSDK {
 
     val isAIMS: Boolean
         get() = currentApp is LedgerParentApp.AIMS
+
+    var isDebug: Boolean = false
+        private set
 }

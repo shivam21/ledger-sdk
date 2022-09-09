@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lib.dehaat.ledger.R
@@ -46,7 +47,7 @@ fun PaymentOptionsButton(
     verticalAlignment = Alignment.CenterVertically
 ) {
     Text(
-        text = "Pay by Bank deposit, Net banking & UPI",
+        text = stringResource(id = R.string.pay_by_bank_deposit_net_banking_amp_upi),
         modifier = Modifier.padding(16.dp)
     )
 

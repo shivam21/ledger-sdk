@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +25,7 @@ import lib.dehaat.ledger.resources.textBold14Sp
     showBackground = true
 )
 @Composable
-fun SanctionedCreditLimitViewPreviewAIMS() {
+private fun SanctionedCreditLimitViewPreviewAIMS() {
     SanctionedCreditLimitView(
         limitInRupees = "10000",
         ledgerColors = AIMSColors()
@@ -36,7 +37,7 @@ fun SanctionedCreditLimitViewPreviewAIMS() {
     showBackground = true
 )
 @Composable
-fun SanctionedCreditLimitViewPreviewDBA() {
+private fun SanctionedCreditLimitViewPreviewDBA() {
     SanctionedCreditLimitView(
         limitInRupees = "10000",
         ledgerColors = DBAColors()
@@ -47,7 +48,7 @@ fun SanctionedCreditLimitViewPreviewDBA() {
 fun SanctionedCreditLimitView(
     limitInRupees: String,
     ledgerColors: LedgerColors,
-    isLmsActivated: () -> Boolean
+    isLmsActivated: () -> Boolean?
 ) {
     Row(
         modifier = Modifier
@@ -63,7 +64,13 @@ fun SanctionedCreditLimitView(
         Text(
             modifier = Modifier
                 .padding(start = 9.dp),
-            text = if (isLmsActivated()) "Sanctioned Credit Limit" else "Available Credit Limit",
+            text = stringResource(
+                if (isLmsActivated() == true) {
+                    R.string.sanctioned_credit_limit
+                } else {
+                    R.string.available_credit_limit
+                }
+            ),
             style = text12Sp(textColor = ledgerColors.LenderNameColor),
             maxLines = 1
         )

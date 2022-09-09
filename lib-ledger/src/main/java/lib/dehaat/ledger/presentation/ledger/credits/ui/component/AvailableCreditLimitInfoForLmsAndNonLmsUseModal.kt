@@ -1,6 +1,10 @@
 package lib.dehaat.ledger.presentation.ledger.credits.ui.component
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -16,15 +20,10 @@ import lib.dehaat.ledger.resources.text14Sp
 import lib.dehaat.ledger.resources.text18Sp
 import lib.dehaat.ledger.resources.textMedium14Sp
 
-val credit_line_limit_definition_for_lms =
-    "Available Credit Limit = Total Credit Limit - Outstanding\n(Note: We have excluded orders in calculation for which remains to be invoiced"
-val credit_line_limit_definition_for_non_lms =
-    "Available Credit Limit = Total Credit Limit - Outstanding - (Orders which remains to be invoiced"
-
 @Composable
 fun AvailableCreditLimitInfoForLmsAndNonLmsUseModal(
     title: String,
-    lmsActivated: Boolean,
+    lmsActivated: Boolean?,
     ledgerColors: LedgerColors,
     onOkClick: () -> Unit,
     onDismissRequest: () -> Unit = {},
@@ -47,7 +46,7 @@ fun AvailableCreditLimitInfoForLmsAndNonLmsUseModal(
 
                 Text(
                     modifier = Modifier,
-                    text = title ,
+                    text = title,
                     style = text14Sp(),
                 )
 

@@ -5,11 +5,16 @@ import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.LedgerParentApp
 import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.callbacks.LedgerCallBack
+import lib.dehaat.ledger.presentation.ledger.revamp.state.credits.outstandingcreditlimit.OutstandingCreditLimitViewState
 import lib.dehaat.ledger.presentation.model.creditlines.CreditLineViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.CreditSummaryViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.CreditViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.InfoViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.OverdueViewData
+import lib.dehaat.ledger.presentation.model.detail.payment.PaymentDetailSummaryViewData
+import lib.dehaat.ledger.presentation.model.invoicelist.InvoiceListViewData
+import lib.dehaat.ledger.presentation.model.revamp.SummaryViewData
+import lib.dehaat.ledger.presentation.model.revamp.transactions.TransactionViewDataV2
 import lib.dehaat.ledger.presentation.model.transactions.TransactionViewData
 
 object DummyDataSource {
@@ -42,6 +47,25 @@ object DummyDataSource {
             minPaymentDueDate = 78
         )
     }
+    val summaryViewData = SummaryViewData(
+        bufferLimit = "100000",
+        creditNoteAmountTillDate = "",
+        externalFinancierSupported = false,
+        interestTillDate = "40000",
+        minInterestAmountDue = "",
+        minInterestOutstandingDate = 7,
+        minOutstandingAmountDue = "",
+        paymentAmountTillDate = "",
+        permanentCreditLimit = "",
+        purchaseAmountTillDate = "",
+        totalAvailableCreditLimit = "",
+        totalCreditLimit = "",
+        totalOutstandingAmount = "-320000",
+        totalPurchaseAmount = "",
+        undeliveredInvoiceAmount = "",
+        totalInterestOutstanding = "",
+        totalInterestPaid = ""
+    )
     val creditSummaryViewData by lazy {
         CreditSummaryViewData(
             creditViewData,
@@ -63,6 +87,21 @@ object DummyDataSource {
             advanceAmount = "000018"
         )
     }
+
+    val invoice = InvoiceListViewData(
+        amount = "20000",
+        date = 6237462923,
+        interestStartDate = 623847623,
+        interestFreePeriodEndDate = 6234786239,
+        ledgerId = "3647",
+        locusId = 3444,
+        outstandingAmount = "26348",
+        partnerId = "26384",
+        source = "SAP",
+        type = "INVOICE",
+        interestDays = 45
+    )
+
     val transactionViewData by lazy {
         TransactionViewData(
             ledgerId = "ledgerId",
@@ -76,16 +115,64 @@ object DummyDataSource {
             source = "SAP"
         )
     }
+
+    val invoiceTransaction = TransactionViewDataV2(
+        amount = "100",
+        creditNoteReason = null,
+        date = 1658214762,
+        erpId = "2022$$0090000169",
+        interestEndDate = 1658214762,
+        interestStartDate = 1658214762,
+        ledgerId = "95",
+        locusId = 4,
+        partnerId = "0010000654",
+        paymentMode = "CASH",
+        source = "SAP",
+        sourceNo = "",
+        type = "INVOICE"
+    )
+
+    val paymentDetailSummaryViewData = PaymentDetailSummaryViewData(
+        referenceId = "refId",
+        timestamp = 78386423894,
+        totalAmount = "1200",
+        mode = "CASH",
+        principalComponent = null,
+        interestComponent = null,
+        overdueInterestComponent = null,
+        penaltyComponent = null,
+        advanceComponent = null,
+        paidTo = null,
+        belongsToGapl = null
+    )
+
+    val outstandingCreditLimitViewState = OutstandingCreditLimitViewState(
+        totalOutstandingAmount = "1000",
+        totalPurchaseAmount = "2000",
+        interestTillDate = "3000",
+        paymentAmountTillDate = "5000",
+        purchaseAmountTillDate = "4000",
+        creditNoteAmountTillDate = "6000"
+    )
+
     private val dbaApp by lazy {
         LedgerParentApp.DBA(
-            ledgerCallBack = LedgerCallBack({}, {}, { _, _ -> }, { context, path -> null }
+            ledgerCallBack = LedgerCallBack(
+                onClickPayNow = {},
+                onRevampPayNowClick = {},
+                onDownloadInvoiceSuccess = {},
+                onPaymentOptionsClick = {},
+                downloadInvoiceIntent = { _, _ -> null },
+                exceptionHandler = {}
             )
         )
     }
+
     private val aimsApp by lazy {
         LedgerParentApp.AIMS(
             downloadInvoiceClick = {},
-            downloadInvoiceIntent = { context, path -> null }
+            downloadInvoiceIntent = { _, _ -> null },
+            exceptionHandler = {}
         )
     }
 
@@ -93,13 +180,15 @@ object DummyDataSource {
         context,
         dbaApp,
         "bucket",
-        R.drawable.ic_info_icon
+        R.drawable.ic_info_icon,
+        true
     )
 
     fun initAIMS(context: Context) = LedgerSDK.init(
         context,
         aimsApp,
         "bucket",
-        R.drawable.ic_info_icon
+        R.drawable.ic_info_icon,
+        true
     )
 }

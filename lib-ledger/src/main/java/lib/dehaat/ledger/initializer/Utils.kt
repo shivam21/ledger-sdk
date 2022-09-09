@@ -24,7 +24,7 @@ fun Long?.toDateMonthYear(): String {
 
 fun format(dateFormat: String, timeInSec: Long?) = try {
     timeInSec?.let {
-        val sdf = SimpleDateFormat(dateFormat, Locale("en", "in"))
+        val sdf = SimpleDateFormat(dateFormat, Locale(LedgerSDK.locale, "in"))
         sdf.format(it * 1000)
     } ?: ""
 } catch (ex: Exception) {
@@ -33,7 +33,7 @@ fun format(dateFormat: String, timeInSec: Long?) = try {
 }
 
 fun formatDecimal(value: Double?, fractionDigitCount: Int = 2): String {
-    val formatter = NumberFormat.getNumberInstance(Locale("en", "in"))
+    val formatter = NumberFormat.getNumberInstance(Locale(LedgerSDK.locale, "in"))
     formatter.minimumFractionDigits = fractionDigitCount
     formatter.maximumFractionDigits = fractionDigitCount
     return formatter.format(value ?: 0.0)
@@ -64,6 +64,34 @@ object Utils {
                 val calendar = Calendar.getInstance()
                 calendar[year, monthOfYear] = dayOfMonth
                 selectedDate(dateFormat.format(calendar.time))
+            }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]
+        )
+        datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+        datePickerDialog.show()
+    }
+
+    fun openDatePicker(
+        context: Context,
+        dateFormat: SimpleDateFormat = sdf,
+        selectedDate: (String, Long) -> Unit
+    ) {
+        val cal = Calendar.getInstance()
+        val currentDate = dateFormat.format(cal.time)
+        if (!TextUtilities.isNullCase(currentDate)) {
+            var date: Date? = null
+            try {
+                date = dateFormat.parse(currentDate)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            if (date != null) cal.time = date
+        }
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                val calendar = Calendar.getInstance()
+                calendar[year, monthOfYear] = dayOfMonth
+                selectedDate(dateFormat.format(calendar.time), calendar.time.time)
             }, cal[Calendar.YEAR], cal[Calendar.MONTH], cal[Calendar.DAY_OF_MONTH]
         )
         datePickerDialog.datePicker.maxDate = System.currentTimeMillis()

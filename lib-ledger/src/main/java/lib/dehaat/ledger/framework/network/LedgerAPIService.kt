@@ -6,6 +6,11 @@ import lib.dehaat.ledger.framework.model.detail.creditnote.ResponseCreditNoteDet
 import lib.dehaat.ledger.framework.model.detail.invoice.ResponseInvoiceDetail
 import lib.dehaat.ledger.framework.model.detail.invoice.invoicedownload.ResponseDownloadInvoice
 import lib.dehaat.ledger.framework.model.detail.payment.ResponsePaymentDetail
+import lib.dehaat.ledger.framework.model.revamp.creditnote.ResponseCreditNoteDetails
+import lib.dehaat.ledger.framework.model.revamp.creditsummary.ResponseCreditSummaryV2
+import lib.dehaat.ledger.framework.model.revamp.invoicedetails.ResponseInvoiceDetails
+import lib.dehaat.ledger.framework.model.revamp.invoicelist.ResponseInvoiceList
+import lib.dehaat.ledger.framework.model.revamp.transactions.ResponseTransaction
 import lib.dehaat.ledger.framework.model.transactions.ResponseTransactions
 import lib.dehaat.ledger.framework.model.transactionsummary.ResponseTransactionSummary
 import retrofit2.Response
@@ -19,9 +24,16 @@ interface LedgerAPIService {
         @Query("partner_id") partnerId: String
     ): Response<ResponseCreditSummary>
 
+    @GET("/finance/accounting/credit-summary/v2")
+    suspend fun getV2CreditSummary(
+        @Query("partner_id") partnerId: String
+    ): Response<ResponseCreditSummaryV2>
+
     @GET("/finance/accounting/transactions-summary")
     suspend fun getTransactionSummary(
-        @Query("partner_id") partnerId: String
+        @Query("partner_id") partnerId: String,
+        @Query("from_date") fromDate: Long?,
+        @Query("to_date") toDate: Long?
     ): Response<ResponseTransactionSummary>
 
     @GET("/finance/accounting/transactions")
@@ -34,6 +46,15 @@ interface LedgerAPIService {
         @Query("to_date") toDate: Long?,
     ): Response<ResponseTransactions>
 
+    @GET("/finance/accounting/transactions/v2")
+    suspend fun getTransactionsV2(
+        @Query("partner_id") partnerId: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("from_date") fromDate: Long?,
+        @Query("to_date") toDate: Long?,
+    ): Response<ResponseTransaction>
+
     @GET("/finance/accounting/credit-lines")
     suspend fun getCreditLines(
         @Query("partner_id") partnerId: String
@@ -43,6 +64,11 @@ interface LedgerAPIService {
     suspend fun getInvoiceDetail(
         @Query("ledger_id") ledgerId: String
     ): Response<ResponseInvoiceDetail>
+
+    @GET("/finance/invoice/v2")
+    suspend fun getInvoiceDetails(
+        @Query("ledger_id") ledgerId: String
+    ): Response<ResponseInvoiceDetails>
 
     @GET("/finance/payment")
     suspend fun getPaymentDetail(
@@ -54,9 +80,22 @@ interface LedgerAPIService {
         @Query("ledger_id") ledgerId: String
     ): Response<ResponseCreditNoteDetail>
 
+    @GET("/finance/credit-note/v2")
+    suspend fun getCreditNoteDetailV2(
+        @Query("ledger_id") ledgerId: String
+    ): Response<ResponseCreditNoteDetails>
+
     @GET("/stock-management/v1/invoice-download")
     suspend fun downloadInvoice(
         @Query("invoice_id") identityId: String,
         @Query("source") source: String
     ): Response<ResponseDownloadInvoice>
+
+    @GET("/finance/invoice/v2")
+    suspend fun getInvoiceList(
+        @Query("partner_id") partnerId: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("filter") filter: String
+    ): Response<ResponseInvoiceList>
 }

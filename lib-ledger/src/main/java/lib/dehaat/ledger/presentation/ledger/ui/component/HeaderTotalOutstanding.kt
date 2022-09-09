@@ -54,7 +54,7 @@ private fun TotalOutstandingDBAPreview() {
 fun HeaderTotalOutstanding(
     creditSummaryData: CreditSummaryViewData?,
     ledgerColors: LedgerColors,
-    isLmsActivated: () -> Boolean,
+    isLmsActivated: () -> Boolean?,
     onClickTotalOutstandingInfo: () -> Unit
 ) {
     Column(
@@ -76,7 +76,7 @@ fun HeaderTotalOutstanding(
                     text = stringResource(id = R.string.total_outstanding),
                     style = text14Sp(textColor = ledgerColors.CtaColor)
                 )
-                if (isLmsActivated()) {
+                if (isLmsActivated() == true) {
                     Icon(
                         modifier = Modifier
                             .padding(start = 7.dp)
@@ -86,11 +86,14 @@ fun HeaderTotalOutstanding(
                     )
                 }
             }
-            Text(
-                modifier = Modifier.padding(top = 8.dp),
-                text = creditSummaryData?.credit?.totalOutstandingAmount.getAmountInRupees(),
-                style = textBold14Sp(textColor = ledgerColors.CtaColor)
-            )
+
+            creditSummaryData?.credit?.totalOutstandingAmount?.let {
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = it.getAmountInRupees(),
+                    style = textBold14Sp(textColor = ledgerColors.CtaColor)
+                )
+            }
         }
     }
 }

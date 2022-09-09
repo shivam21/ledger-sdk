@@ -54,7 +54,7 @@ fun AvailableCreditLimitViewScreenAIMS() {
 fun AvailableCreditLimitView(
     limitInRupees: String,
     ledgerColors: LedgerColors,
-    isLmsActivated: () -> Boolean,
+    isLmsActivated: () -> Boolean?,
     onInfoIconClick: () -> Unit
 ) {
     Row(
@@ -75,7 +75,7 @@ fun AvailableCreditLimitView(
             text = "Available Credit Limit",
             style = text12Sp(textColor = ledgerColors.LenderNameColor),
             maxLines = 1,
-            fontWeight = if (isLmsActivated()) {
+            fontWeight = if (isLmsActivated() == true) {
                 FontWeight.Bold
             } else {
                 FontWeight.Normal
@@ -96,7 +96,7 @@ fun AvailableCreditLimitView(
             style = textBold14Sp(textColor = ledgerColors.TransactionDateColor),
             maxLines = 1,
             textAlign = TextAlign.End,
-            fontWeight = if (isLmsActivated()) {
+            fontWeight = if (isLmsActivated() == true) {
                 FontWeight.Bold
             } else {
                 FontWeight.Normal

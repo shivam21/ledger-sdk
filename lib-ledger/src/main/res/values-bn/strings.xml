@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="total_outstanding">মোট বকেয়া</string>
+    <string name="ledger">জমাখরচের খাতা</string>
+    <string name="purchase_amount">ক্রয় মূল</string>
+    <string name="payment_amount">প্রদেয় টাকার পরিমাণ</string>
+    <string name="to">%s কে %s</string>
+    <string name="pay_now_text">এখনই পেমেন্ট করুন</string>
+    <string name="pay_by_bank_deposit_net_banking_amp_upi">নেট ব্যাঙ্কিং, UPI &amp; কার্ডের মাধ্যমে পেমেন্ট করুন</string>
+    <string name="transactions">লেনদেন</string>
+    <string name="credits">ক্রেডিট</string>
+    <string name="available_credit_limit">উপলব্ধ ক্রেডিটের সীমা</string>
+    <string name="available_credit_limit_definition">উপলব্ধ ক্রেডিট সীমা = মোট ক্রেডিট সীমা - বকেয়া - (যে অর্ডারগুলির চালান বানানো বাকি আছে)</string>
+    <string name="information">তথ্য</string>
+    <string name="okay">ঠিক আছে</string>
+    <string name="outstanding">বকেয়া</string>
+</resources>

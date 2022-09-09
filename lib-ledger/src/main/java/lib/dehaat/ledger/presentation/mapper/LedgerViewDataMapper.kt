@@ -13,6 +13,11 @@ import lib.dehaat.ledger.entities.detail.creditnote.SummaryEntity
 import lib.dehaat.ledger.entities.detail.invoice.InvoiceDetailDataEntity
 import lib.dehaat.ledger.entities.detail.invoice.LoanEntity
 import lib.dehaat.ledger.entities.detail.invoice.OverdueInfoEntity
+import lib.dehaat.ledger.entities.revamp.invoice.InvoiceDataEntity
+import lib.dehaat.ledger.entities.revamp.invoice.ProductEntityV2
+import lib.dehaat.ledger.entities.revamp.invoice.ProductsInfoEntityV2
+import lib.dehaat.ledger.entities.revamp.invoicelist.InvoiceListEntity
+import lib.dehaat.ledger.entities.revamp.transaction.TransactionEntityV2
 import lib.dehaat.ledger.entities.transactions.TransactionEntity
 import lib.dehaat.ledger.entities.transactionsummary.TransactionSummaryEntity
 import lib.dehaat.ledger.presentation.model.creditlines.CreditLineViewData
@@ -27,6 +32,15 @@ import lib.dehaat.ledger.presentation.model.detail.creditnote.SummaryViewData
 import lib.dehaat.ledger.presentation.model.detail.invoice.InvoiceDetailDataViewData
 import lib.dehaat.ledger.presentation.model.detail.invoice.LoanViewData
 import lib.dehaat.ledger.presentation.model.detail.invoice.OverdueInfoViewData
+import lib.dehaat.ledger.presentation.model.invoicelist.InvoiceListViewData
+import lib.dehaat.ledger.presentation.model.revamp.creditnote.CreditNoteDetailsViewData
+import lib.dehaat.ledger.presentation.model.revamp.creditnote.CreditNoteSummaryViewData
+import lib.dehaat.ledger.presentation.model.revamp.invoice.CreditNoteViewData
+import lib.dehaat.ledger.presentation.model.revamp.invoice.InvoiceDetailsViewData
+import lib.dehaat.ledger.presentation.model.revamp.invoice.ProductViewDataV2
+import lib.dehaat.ledger.presentation.model.revamp.invoice.ProductsInfoViewDataV2
+import lib.dehaat.ledger.presentation.model.revamp.invoice.SummaryViewDataV2
+import lib.dehaat.ledger.presentation.model.revamp.transactions.TransactionViewDataV2
 import lib.dehaat.ledger.presentation.model.transactions.TransactionViewData
 import lib.dehaat.ledger.presentation.model.transactionsummary.TransactionSummaryViewData
 
@@ -66,10 +80,92 @@ class LedgerViewDataMapper @Inject constructor() {
         toTransactionViewData(it)
     }
 
+    fun toTransactionEntity(data: List<TransactionEntityV2>) = data.map {
+        TransactionViewDataV2(
+            amount = it.amount,
+            creditNoteReason = it.creditNoteReason,
+            date = it.date,
+            erpId = it.erpId,
+            interestEndDate = it.interestEndDate,
+            interestStartDate = it.interestStartDate,
+            ledgerId = it.ledgerId,
+            locusId = it.locusId,
+            partnerId = it.partnerId,
+            paymentMode = it.paymentMode,
+            source = it.source,
+            sourceNo = it.sourceNo,
+            type = it.type
+        )
+    }
+
     fun toCreditNoteDetailDataEntity(data: CreditNoteDetailEntity) = with(data) {
         CreditNoteDetailViewData(
             summary = getCreditNoteDetailSummaryViewData(summary),
             productsInfo = getCreditNoteDetailProductInfoViewData(productsInfo),
+        )
+    }
+
+    fun toCreditNoteDetailsDataEntity(data: CreditNoteDetailEntity) = with(data) {
+        CreditNoteDetailsViewData(
+            summary = getCreditNoteDetailsSummaryViewData(summary),
+            productsInfo = getProductInfoViewData(productsInfo),
+        )
+    }
+
+    private fun getCreditNoteDetailsSummaryViewData(summary: SummaryEntity) = with(summary) {
+        CreditNoteSummaryViewData(
+            amount = amount,
+            invoiceDate = invoiceDate,
+            invoiceNumber = invoiceNumber,
+            reason = reason,
+            timestamp = timestamp
+        )
+    }
+
+    private fun getProductInfoViewData(data: ProductsInfoEntityV2) = with(data) {
+        ProductsInfoViewDataV2(
+            count = count,
+            discount = discount,
+            gst = gst,
+            productList = getProductList(productList),
+            itemTotal = itemTotal,
+            subTotal = subTotal
+        )
+    }
+
+    private fun getProductInfoViewData(data: ProductsInfoEntity) = with(data) {
+        ProductsInfoViewDataV2(
+            count = count,
+            discount = discount,
+            gst = gst,
+            productList = getProductList(productList),
+            itemTotal = itemTotal,
+            subTotal = subTotal
+        )
+    }
+
+    private fun getProductList(
+        productList: List<ProductEntityV2>
+    ) = productList.map {
+        ProductViewDataV2(
+            fname = it.fname,
+            name = it.name,
+            priceTotal = it.priceTotal,
+            priceTotalDiscexcl = it.priceTotalDiscexcl,
+            quantity = it.quantity
+        )
+    }
+
+    @JvmName("product_list")
+    private fun getProductList(
+        productList: List<ProductEntity>?
+    ) = productList?.map {
+        ProductViewDataV2(
+            fname = it.fname,
+            name = it.name,
+            priceTotal = it.priceTotal,
+            priceTotalDiscexcl = it.priceTotalDiscexcl,
+            quantity = it.quantity.toIntOrNull()
         )
     }
 
@@ -92,9 +188,33 @@ class LedgerViewDataMapper @Inject constructor() {
     fun toInvoiceDetailDataViewData(data: InvoiceDetailDataEntity) = with(data) {
         InvoiceDetailDataViewData(
             summary = getInvoiceDetailSummaryViewData(summary),
-            loans = loans.map { getInvoiceDetailLoanViewData(it) },
+            loans = loans?.map { getInvoiceDetailLoanViewData(it) },
             overdueInfo = getInvoiceDetailOverdueViewData(overdueInfo),
             productsInfo = getInvoiceDetailProductInfoViewData(productsInfo),
+        )
+    }
+
+    fun toInvoiceDetailsViewData(data: InvoiceDataEntity) = with(data) {
+        InvoiceDetailsViewData(
+            creditNotes = creditNotes.map {
+                CreditNoteViewData(
+                    creditNoteAmount = it.creditNoteAmount,
+                    creditNoteDate = it.creditNoteDate,
+                    creditNoteType = it.creditNoteType,
+                    ledgerId = it.ledgerId
+                )
+            },
+            productsInfo = getProductInfoViewData(productsInfo),
+            summary = SummaryViewDataV2(
+                interestBeingCharged = summary.interestBeingCharged,
+                interestDays = summary.interestDays,
+                interestStartDate = summary.interestStartDate,
+                invoiceAmount = summary.invoiceAmount,
+                invoiceDate = summary.invoiceDate,
+                invoiceId = summary.invoiceId,
+                processingFee = summary.processingFee,
+                totalOutstandingAmount = summary.totalOutstandingAmount
+            )
         )
     }
 
@@ -161,7 +281,7 @@ class LedgerViewDataMapper @Inject constructor() {
             gst = gst,
             itemTotal = itemTotal,
             subTotal = subTotal,
-            productList = productList.map {
+            productList = productList?.map {
                 getCreditNoteDetailProductViewData(it)
             }
         )
@@ -243,6 +363,22 @@ class LedgerViewDataMapper @Inject constructor() {
             interestOutstandingAmount = interestOutstandingAmount,
             overdueInterestOutstandingAmount = overdueInterestOutstandingAmount,
             penaltyOutstandingAmount = penaltyOutstandingAmount
+        )
+    }
+
+    fun toInvoiceListViewData(entity: List<InvoiceListEntity>?) = entity?.map {
+        InvoiceListViewData(
+            amount = it.amount,
+            date = it.date,
+            interestStartDate = it.interestStartDate,
+            interestFreePeriodEndDate = it.interestFreePeriodEndDate,
+            ledgerId = it.ledgerId,
+            locusId = it.locusId,
+            outstandingAmount = it.outstandingAmount,
+            partnerId = it.partnerId,
+            source = it.source,
+            type = it.type,
+            interestDays = it.interestDays
         )
     }
 }

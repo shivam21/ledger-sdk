@@ -9,6 +9,8 @@ data class Summary(
     val amount: String,
     @Json(name = "origin_invoice_no")
     val invoiceNumber: String?,
+    @Json(name = "invoice_date")
+    val invoiceDate: Long?,
     @Json(name = "timestamp")
     val timestamp: Long,
     @Json(name = "reason")

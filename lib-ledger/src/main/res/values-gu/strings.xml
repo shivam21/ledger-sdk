@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ledger">લેજર</string>
+    <string name="total_outstanding">કુલ ઉધાર</string>
+    <string name="purchase_amount">ખરીદ ની રકમ</string>
+    <string name="payment_amount">પેમેન્ટ રકમ</string>
+    <string name="to">%s પ્રતિ %s</string>
+    <string name="pay_now_text">હમણાં જ પેમેન્ટ કરો</string>
+    <string name="pay_by_bank_deposit_net_banking_amp_upi">નેટ બેન્કિંગ, યુપીઆઈ &amp; કાર્ડ ના માધ્યમ થી પેમેન્ટ કરો</string>
+    <string name="transactions">ટટ્રાન્જેક્શન</string>
+    <string name="credits">ક્રેડિટ</string>
+    <string name="available_credit_limit">હાજર ક્રેડિટ ની લિમિટ</string>
+    <string name="available_credit_limit_definition">ઉપલબ્ધ ક્રેડિટ લિમિટ = કુલ ક્રેડિટ રકમ - ઉધાર - (ઓર્ડર જેમના બિલ બનવા માટે બાકી છે)</string>
+    <string name="information">માહિતી</string>
+    <string name="okay">બરાબર</string>
+    <string name="outstanding">ઉધાર</string>
+</resources>

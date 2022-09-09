@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="total_outstanding">एकूण थकबाकी</string>
+    <string name="ledger">खातेवही (लेजर)</string>
+    <string name="purchase_amount">खरेदीची रक्कम</string>
+    <string name="payment_amount">देयक रक्कम</string>
+    <string name="to">%s साठी %s</string>
+    <string name="pay_now_text">आता पैसे भरा</string>
+    <string name="pay_by_bank_deposit_net_banking_amp_upi">नेट बँकिंग, UPI आणि कार्डद्वारे पैसे भरा </string>
+    <string name="transactions">व्यवहार</string>
+    <string name="credits">ক্রেডিট</string>
+    <string name="available_credit_limit">क्रेडिट मर्यादा उपलब्ध </string>
+    <string name="available_credit_limit_definition">उपलब्ध क्रेडिट मर्यादा = एकूण क्रेडिट मर्यादा - थकबाकी - (ज्या ऑर्डर्सचे इनव्हॉइस बनविणे बाकी आहे)</string>
+    <string name="information">माहिती</string>
+    <string name="okay">ओके</string>
+    <string name="outstanding">थकबाकी</string>
+</resources>

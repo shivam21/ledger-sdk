@@ -12,6 +12,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import java.io.IOException
 import javax.inject.Inject
+import lib.dehaat.ledger.initializer.LedgerSDK
 
 class DownloadFileUtil @Inject constructor(
     @ApplicationContext val context: Context
@@ -41,7 +42,11 @@ class DownloadFileUtil @Inject constructor(
             AWSMobileClient.getInstance().credentialsProvider,
             ClientConfiguration()
         )
-        s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1))
+        if (LedgerSDK.isDebug) {
+            s3Client.setRegion(Region.getRegion(Regions.AP_SOUTH_1))
+        } else {
+            s3Client.setRegion(Region.getRegion(Regions.AP_SOUTHEAST_1))
+        }
         return s3Client
     }
 

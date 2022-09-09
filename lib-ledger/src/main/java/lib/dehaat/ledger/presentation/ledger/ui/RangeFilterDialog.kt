@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import java.util.*
 import lib.dehaat.ledger.initializer.Utils
 import lib.dehaat.ledger.initializer.sdf
 import lib.dehaat.ledger.initializer.themes.AIMSColors
@@ -40,7 +41,6 @@ import lib.dehaat.ledger.presentation.model.transactions.DaysToFilter
 import lib.dehaat.ledger.resources.TextWhite
 import lib.dehaat.ledger.resources.text16Sp
 import lib.dehaat.ledger.resources.textMedium20Sp
-import java.util.*
 
 @Preview(
     name = "RangeFilterDialog Preview AIMS",
@@ -48,7 +48,7 @@ import java.util.*
 )
 @Composable
 fun PreviewAIMS() {
-    RangeFilterDialog(ledgerColors = AIMSColors(), filtered = { })
+    RangeFilterDialog(ledgerColors = AIMSColors(), filtered = { _, _ -> })
 }
 
 @Preview(
@@ -57,13 +57,13 @@ fun PreviewAIMS() {
 )
 @Composable
 fun PreviewDBA() {
-    RangeFilterDialog(ledgerColors = DBAColors(), filtered = { })
+    RangeFilterDialog(ledgerColors = DBAColors(), filtered = { _, _ -> })
 }
 
 @Composable
 fun RangeFilterDialog(
     ledgerColors: LedgerColors,
-    filtered: () -> Unit
+    filtered: (Long?, Long?) -> Unit
 ) {
     val currentDate = Calendar.getInstance().time
     val date = sdf.format(currentDate)
@@ -143,7 +143,7 @@ fun RangeFilterDialog(
                             modifier = Modifier
                                 .clickable {
                                     showDialog = false
-                                    filtered()
+                                    filtered(null, null)
                                 }
                                 .padding(16.dp),
                             text = "Cancel",
@@ -163,7 +163,7 @@ fun RangeFilterDialog(
                                     ledgerTransactionViewModel.applyDaysFilter(
                                         DaysToFilter.CustomDays(from, to)
                                     )
-                                    filtered()
+                                    filtered(from, to)
                                 }
                                 .padding(16.dp),
                             text = "Ok",

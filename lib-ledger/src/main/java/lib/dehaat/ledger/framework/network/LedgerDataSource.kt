@@ -1,5 +1,6 @@
 package lib.dehaat.ledger.framework.network
 
+import com.cleanarch.base.common.ApiExtraInfo
 import com.cleanarch.base.entity.result.api.APIResultEntity
 import com.dehaat.androidbase.coroutine.IDispatchers
 import com.dehaat.androidbase.network.api.makeAPICall
@@ -7,6 +8,8 @@ import javax.inject.Inject
 import lib.dehaat.ledger.data.source.ILedgerDataSource
 import lib.dehaat.ledger.entities.transactionsummary.TransactionSummaryEntity
 import lib.dehaat.ledger.framework.mapper.LedgerFrameworkMapper
+import lib.dehaat.ledger.presentation.LedgerConstants.API_REQUEST_TRACE_ID
+import lib.dehaat.ledger.presentation.LedgerConstants.IB_REQUEST_IDENTIFIER
 import retrofit2.Response
 
 class LedgerDataSource @Inject constructor(
@@ -21,11 +24,22 @@ class LedgerDataSource @Inject constructor(
         it?.data?.let { data -> mapper.toCreditSummaryDataEntity(data) }
     }
 
-    override suspend fun getTransactionSummary(
+    override suspend fun getCreditSummaryV2(
         partnerId: String
+    ) = callAPI(
+        dispatcher,
+        { apiService.getV2CreditSummary(partnerId) }
+    ) {
+        it?.data?.credit?.let { data -> mapper.toCreditSummaryEntity(data) }
+    }
+
+    override suspend fun getTransactionSummary(
+        partnerId: String,
+        fromDate: Long?,
+        toDate: Long?
     ): APIResultEntity<TransactionSummaryEntity?> = callAPI(
         dispatcher,
-        { apiService.getTransactionSummary(partnerId) }
+        { apiService.getTransactionSummary(partnerId, fromDate, toDate) }
     ) {
         it?.transactionDetailData?.let { data -> mapper.toTransactionSummaryDataEntity(data) }
     }
@@ -52,6 +66,27 @@ class LedgerDataSource @Inject constructor(
         it?.transactionsData?.let { data -> mapper.toTransactionsDataEntity(data) } ?: emptyList()
     }
 
+    override suspend fun getTransactionsV2(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        fromDate: Long?,
+        toDate: Long?
+    ) = callAPI(
+        dispatcher,
+        {
+            apiService.getTransactionsV2(
+                partnerId = partnerId,
+                fromDate = fromDate,
+                toDate = toDate,
+                limit = limit,
+                offset = offset
+            )
+        }
+    ) {
+        it?.data?.let { data -> mapper.toTransactionsEntity(data) } ?: emptyList()
+    }
+
     override suspend fun getCreditLines(
         partnerId: String
     ) = callAPI(
@@ -67,6 +102,15 @@ class LedgerDataSource @Inject constructor(
         { apiService.getInvoiceDetail(ledgerId) }
     ) {
         it?.invoiceDetailData?.let { data -> mapper.toInvoiceDetailDataEntity(data) }
+    }
+
+    override suspend fun getInvoiceDetails(
+        ledgerId: String
+    ) = callAPI(
+        dispatcher,
+        { apiService.getInvoiceDetails(ledgerId) }
+    ) {
+        it?.data?.let { data -> mapper.toInvoiceDetailEntity(data) }
     }
 
     override suspend fun getInvoiceDownload(
@@ -97,6 +141,37 @@ class LedgerDataSource @Inject constructor(
         it?.creditNoteDetailData?.let { data -> mapper.toCreditNoteDetailDataEntity(data) }
     }
 
+    override suspend fun getCreditNoteDetailV2(
+        ledgerId: String
+    ) = callAPI(
+        dispatcher,
+        { apiService.getCreditNoteDetailV2(ledgerId) }
+    ) {
+        it?.data?.let { data -> mapper.toCreditNoteDetailsEntity(data) }
+    }
+
+    override suspend fun getInvoices(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        isInterestApproached: Boolean
+    ) = callAPI(
+        dispatcher,
+        {
+            apiService.getInvoiceList(
+                partnerId, limit, offset, if (isInterestApproached) {
+                    "interest_approached_invoices"
+                } else {
+                    "interest_approaching_invoices"
+                }
+            )
+        }
+    ) {
+        it?.data?.let { data ->
+            mapper.toInterestApproachedInvoiceListEntity(data)
+        }
+    }
+
     private suspend fun <D, C> callAPI(
         dispatchers: IDispatchers,
         apiCall: suspend () -> Response<D>,
@@ -106,6 +181,11 @@ class LedgerDataSource @Inject constructor(
             dispatchers.io,
             { apiCall.invoke() },
             parse
-        )
+        ) { request, response ->
+            ApiExtraInfo().apply {
+                put(API_REQUEST_TRACE_ID, request?.header(API_REQUEST_TRACE_ID))
+                put(IB_REQUEST_IDENTIFIER, response?.headers()?.get(IB_REQUEST_IDENTIFIER))
+            }
+        }
     }
 }

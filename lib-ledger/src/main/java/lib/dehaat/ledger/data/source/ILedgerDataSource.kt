@@ -7,6 +7,11 @@ import lib.dehaat.ledger.entities.detail.creditnote.CreditNoteDetailEntity
 import lib.dehaat.ledger.entities.detail.invoice.InvoiceDetailDataEntity
 import lib.dehaat.ledger.entities.detail.invoice.invoicedownload.InvoiceDownloadDataEntity
 import lib.dehaat.ledger.entities.detail.payment.PaymentDetailEntity
+import lib.dehaat.ledger.entities.revamp.creditnote.CreditNoteDetailsEntity
+import lib.dehaat.ledger.entities.revamp.creditsummary.CreditSummaryEntityV2
+import lib.dehaat.ledger.entities.revamp.invoice.InvoiceDataEntity
+import lib.dehaat.ledger.entities.revamp.invoicelist.InvoiceListEntity
+import lib.dehaat.ledger.entities.revamp.transaction.TransactionEntityV2
 import lib.dehaat.ledger.entities.transactions.TransactionEntity
 import lib.dehaat.ledger.entities.transactionsummary.TransactionSummaryEntity
 
@@ -14,8 +19,12 @@ interface ILedgerDataSource {
 
     suspend fun getCreditSummary(partnerId: String): APIResultEntity<CreditSummaryEntity?>
 
+    suspend fun getCreditSummaryV2(partnerId: String): APIResultEntity<CreditSummaryEntityV2?>
+
     suspend fun getTransactionSummary(
-        partnerId: String
+        partnerId: String,
+        fromDate: Long?,
+        toDate: Long?
     ): APIResultEntity<TransactionSummaryEntity?>
 
     suspend fun getTransactions(
@@ -27,6 +36,14 @@ interface ILedgerDataSource {
         toDate: Long?,
     ): APIResultEntity<List<TransactionEntity>>
 
+    suspend fun getTransactionsV2(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        fromDate: Long?,
+        toDate: Long?,
+    ): APIResultEntity<List<TransactionEntityV2>>
+
     suspend fun getCreditLines(
         partnerId: String
     ): APIResultEntity<List<CreditLineEntity>>
@@ -34,6 +51,10 @@ interface ILedgerDataSource {
     suspend fun getInvoiceDetail(
         ledgerId: String
     ): APIResultEntity<InvoiceDetailDataEntity?>
+
+    suspend fun getInvoiceDetails(
+        ledgerId: String
+    ): APIResultEntity<InvoiceDataEntity?>
 
     suspend fun getInvoiceDownload(
         identityId: String,
@@ -47,4 +68,15 @@ interface ILedgerDataSource {
     suspend fun getCreditNoteDetail(
         ledgerId: String
     ): APIResultEntity<CreditNoteDetailEntity?>
+
+    suspend fun getCreditNoteDetailV2(
+        ledgerId: String
+    ): APIResultEntity<CreditNoteDetailsEntity?>
+
+    suspend fun getInvoices(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        isInterestApproached: Boolean
+    ): APIResultEntity<List<InvoiceListEntity>?>
 }

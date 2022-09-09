@@ -57,7 +57,7 @@ private fun CreditSummaryDBA() {
 fun CreditSummaryView(
     creditSummaryData: CreditSummaryViewData?,
     ledgerColors: LedgerColors,
-    isLmsActivated: () -> Boolean,
+    isLmsActivated: () -> Boolean?,
     onClickTotalOutstandingInfo: () -> Unit,
     onPayNowClick: () -> Unit,
     onPaymentOptionsClick: () -> Unit
@@ -91,7 +91,7 @@ fun CreditSummaryView(
             )
         }
 
-        Divider(thickness = 4.dp, color = ledgerColors.CreditViewHeaderDividerBColor)
+        Divider(thickness = 2.dp, color = ledgerColors.CreditViewHeaderDividerBColor)
 
         if (LedgerSDK.isDBA) {
             PaymentOptionsButton(ledgerColors, onPaymentOptionsClick)

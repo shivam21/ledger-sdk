@@ -28,7 +28,7 @@ fun CustomAppBar(
     iconRight: Painter? = null,
     onBackPress: () -> Unit,
     onRightIconClick: (() -> Unit)? = null,
-    appBarElevation: Dp = 0.dp,
+    appBarElevation: Dp = 8.dp,
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),

@@ -100,7 +100,7 @@ class LedgerTransactionViewModel @Inject constructor(
         pageNumber: Int
     ): APIResultEntity<List<TransactionEntity>> {
         val (fromDate, toDate) = getFromAndToDate()
-        return getTransactionsUseCase.invoke(
+        return getTransactionsUseCase.getTransactions(
             partnerId = partnerId,
             fromDate = fromDate,
             toDate = toDate,

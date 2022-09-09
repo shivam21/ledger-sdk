@@ -1,8 +1,8 @@
 package lib.dehaat.ledger.data
 
+import javax.inject.Inject
 import lib.dehaat.ledger.data.source.ILedgerDataSource
 import lib.dehaat.ledger.domain.ILedgerRepository
-import javax.inject.Inject
 
 class LedgerRepository @Inject constructor(private val networkSource: ILedgerDataSource) :
     ILedgerRepository {
@@ -10,9 +10,15 @@ class LedgerRepository @Inject constructor(private val networkSource: ILedgerDat
     override suspend fun getCreditSummary(partnerId: String) =
         networkSource.getCreditSummary(partnerId)
 
-    override suspend fun getTransactionSummary(
+    override suspend fun getCreditSummaryV2(
         partnerId: String
-    ) = networkSource.getTransactionSummary(partnerId)
+    ) = networkSource.getCreditSummaryV2(partnerId)
+
+    override suspend fun getTransactionSummary(
+        partnerId: String,
+        fromDate: Long?,
+        toDate: Long?
+    ) = networkSource.getTransactionSummary(partnerId, fromDate, toDate)
 
     override suspend fun getTransactions(
         partnerId: String,
@@ -30,6 +36,20 @@ class LedgerRepository @Inject constructor(private val networkSource: ILedgerDat
         toDate
     )
 
+    override suspend fun getTransactionsV2(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        fromDate: Long?,
+        toDate: Long?
+    ) = networkSource.getTransactionsV2(
+        partnerId,
+        limit,
+        offset,
+        fromDate,
+        toDate
+    )
+
     override suspend fun getCreditLines(
         partnerId: String
     ) = networkSource.getCreditLines(
@@ -39,6 +59,12 @@ class LedgerRepository @Inject constructor(private val networkSource: ILedgerDat
     override suspend fun getInvoiceDetail(
         ledgerId: String
     ) = networkSource.getInvoiceDetail(
+        ledgerId
+    )
+
+    override suspend fun getInvoiceDetails(
+        ledgerId: String
+    ) = networkSource.getInvoiceDetails(
         ledgerId
     )
 
@@ -60,5 +86,23 @@ class LedgerRepository @Inject constructor(private val networkSource: ILedgerDat
         ledgerId: String
     ) = networkSource.getCreditNoteDetail(
         ledgerId
+    )
+
+    override suspend fun getCreditNoteDetails(
+        ledgerId: String
+    ) = networkSource.getCreditNoteDetailV2(
+        ledgerId
+    )
+
+    override suspend fun getInterestApproachedInvoices(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        isInterestApproached: Boolean
+    ) = networkSource.getInvoices(
+        partnerId,
+        limit,
+        offset,
+        isInterestApproached
     )
 }

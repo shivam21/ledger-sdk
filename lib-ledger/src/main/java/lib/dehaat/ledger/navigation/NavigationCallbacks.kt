@@ -1,20 +1,26 @@
 package lib.dehaat.ledger.navigation
 
-interface DetailPageNavigationCallback {
-    fun navigateToInvoiceDetailPage(
-        legerId: String,
-        erpId: String?,
-        locusId: String?,
-        source: String,
-        isLMSActivated: Boolean
-    )
+import android.os.Bundle
 
-    fun navigateToCreditNoteDetailPage(legerId: String, erpId: String?, locusId: String?)
-    fun navigateToPaymentDetailPage(
-        legerId: String,
-        erpId: String?,
-        locusId: String?,
-        mode: String?,
-        isLMSActivated: Boolean
-    )
+interface DetailPageNavigationCallback {
+    fun navigateToInvoiceDetailPage(args: Bundle)
+
+    fun navigateToCreditNoteDetailPage(args: Bundle)
+
+    fun navigateToPaymentDetailPage(args: Bundle)
+
+    fun navigateToOutstandingDetailPage(args: Bundle)
+
+    fun navigateToInvoiceListPage(args: Bundle)
+
+    fun navigateToAvailableCreditLimitDetailPage(args: Bundle)
+
+    fun navigateToRevampInvoiceDetailPage(args: Bundle)
+
+    fun navigateToRevampCreditNoteDetailPage(args: Bundle)
+
+    fun navigateToRevampPaymentDetailPage(args: Bundle)
+
+    fun navigateToRevampWeeklyInterestDetailPage(args: Bundle)
+
 }

@@ -3,8 +3,10 @@ package lib.dehaat.ledger.domain.usecases
 import javax.inject.Inject
 import lib.dehaat.ledger.domain.ILedgerRepository
 
-class GetTransactionsUseCase @Inject constructor(val repo: ILedgerRepository) {
-    suspend operator fun invoke(
+class GetTransactionsUseCase @Inject constructor(
+    val repo: ILedgerRepository
+) {
+    suspend fun getTransactions(
         partnerId: String,
         limit: Int,
         offset: Int,
@@ -16,6 +18,20 @@ class GetTransactionsUseCase @Inject constructor(val repo: ILedgerRepository) {
         limit = limit,
         offset = offset,
         onlyPenaltyInvoices = onlyPenaltyInvoices,
+        fromDate = fromDate,
+        toDate = toDate
+    )
+
+    suspend fun getTransactionsV2(
+        partnerId: String,
+        limit: Int,
+        offset: Int,
+        toDate: Long?,
+        fromDate: Long?,
+    ) = repo.getTransactionsV2(
+        partnerId = partnerId,
+        limit = limit,
+        offset = offset,
         fromDate = fromDate,
         toDate = toDate
     )

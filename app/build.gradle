@@ -98,8 +98,8 @@ dependencies {
     debugImplementation "com.readystatesoftware.chuck:library:1.1.0"
     releaseImplementation "com.readystatesoftware.chuck:library-no-op:1.1.0"
 
-    implementation 'com.github.Dehaat:clean-arch-base:0.0.1'
-    implementation 'com.github.Dehaat:dehaat-android-base:v0.0.2-beta-6'
+    implementation 'com.github.Dehaat:clean-arch-base:0.0.2'
+    implementation 'com.github.dehaat:dehaat-android-base:v0.0.2-beta-8'
 
     //AWS
     def aws_android_sdk = '2.6.31'

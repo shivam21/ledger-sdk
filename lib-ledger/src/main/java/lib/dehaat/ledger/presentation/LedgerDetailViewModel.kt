@@ -30,6 +30,7 @@ import lib.dehaat.ledger.presentation.mapper.LedgerViewDataMapper
 import lib.dehaat.ledger.presentation.model.creditlines.CreditLineViewData
 import lib.dehaat.ledger.presentation.model.creditsummary.CreditSummaryViewData
 import lib.dehaat.ledger.presentation.model.transactions.DaysToFilter
+import lib.dehaat.ledger.presentation.model.transactions.toStartAndEndDates
 import lib.dehaat.ledger.util.processAPIResponseWithFailureSnackBar
 
 @HiltViewModel
@@ -102,7 +103,7 @@ class LedgerDetailViewModel @Inject constructor(
     private fun getCreditSummaryFromServer() {
         callInViewModelScope {
             callingAPI()
-            val response = getCreditSummaryUseCase.invoke(partnerId = partnerId)
+            val response = getCreditSummaryUseCase.getCreditSummary(partnerId = partnerId)
             calledAPI()
             processCreditSummaryResponse(response)
         }
@@ -128,9 +129,10 @@ class LedgerDetailViewModel @Inject constructor(
         }
     }
 
-    fun getTransactionSummaryFromServer() = callInViewModelScope {
+    fun getTransactionSummaryFromServer(daysToFilter: DaysToFilter? = null) = callInViewModelScope {
         callingAPI()
-        val response = getTransactionSummaryUseCase.invoke(partnerId)
+        val dates = daysToFilter?.toStartAndEndDates()
+        val response = getTransactionSummaryUseCase.invoke(partnerId, dates?.first, dates?.second)
         calledAPI()
         processTransactionSummaryResponse(response)
     }
@@ -150,9 +152,14 @@ class LedgerDetailViewModel @Inject constructor(
     }
 
     private fun sendShowSnackBarEvent(message: String) {
+        updateAPIFailure()
         viewModelScope.launch {
             _uiEvent.emit(UiEvent.ShowSnackbar(message))
         }
+    }
+
+    private fun updateAPIFailure() = viewModelState.update {
+        it.copy(isError = true)
     }
 
     private fun calledAPI() = updateProgressDialog(false)
@@ -175,7 +182,7 @@ class LedgerDetailViewModel @Inject constructor(
         }
 
     fun isLMSActivated() =
-        viewModelState.value.creditSummaryViewData?.credit?.externalFinancierSupported ?: false
+        viewModelState.value.creditSummaryViewData?.credit?.externalFinancierSupported
 
     fun openAllOutstandingModal() {
         viewModelState.update {

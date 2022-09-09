@@ -7,17 +7,16 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.presentation.common.uicomponent.SpaceMedium
 import lib.dehaat.ledger.resources.text14Sp
 import lib.dehaat.ledger.resources.text18Sp
 import lib.dehaat.ledger.resources.textMedium14Sp
-
-val available_credit_limit_definition =
-    "Available Credit Limit = Total Credit Limit - Outstanding - (Orders which remains to be invoiced"
 
 @Composable
 fun AvailableCreditLimitInfoModal(
@@ -34,7 +33,7 @@ fun AvailableCreditLimitInfoModal(
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     modifier = Modifier,
-                    text = "Information",
+                    text = stringResource(R.string.information),
                     style = text18Sp(fontWeight = FontWeight.Bold),
                     maxLines = 1
                 )
@@ -44,8 +43,9 @@ fun AvailableCreditLimitInfoModal(
 
                 Text(
                     modifier = Modifier,
-                    text = available_credit_limit_definition,
-                    style = text14Sp())
+                    text = stringResource(id = R.string.available_credit_limit_definition),
+                    style = text14Sp()
+                )
 
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -56,7 +56,7 @@ fun AvailableCreditLimitInfoModal(
                     }) {
                         Text(
                             modifier = Modifier,
-                            text = "OK",
+                            text = stringResource(R.string.okay),
                             style = textMedium14Sp(textColor = ledgerColors.DownloadInvoiceColor),
                             maxLines = 1
                         )

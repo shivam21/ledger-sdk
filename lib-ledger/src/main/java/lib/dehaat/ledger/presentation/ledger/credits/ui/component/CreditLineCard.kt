@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ import lib.dehaat.ledger.resources.textBold14Sp
     showBackground = true
 )
 @Composable
-fun CreditLineCardPreviewAIMS() {
+private fun CreditLineCardPreviewAIMS() {
     CreditLineCard(
         ledgerColors = AIMSColors(),
         data = DummyDataSource.creditLineViewData,
@@ -46,7 +47,7 @@ fun CreditLineCardPreviewAIMS() {
     showBackground = true
 )
 @Composable
-fun CreditLineCardPreviewDBA() {
+private fun CreditLineCardPreviewDBA() {
     CreditLineCard(
         ledgerColors = DBAColors(),
         data = DummyDataSource.creditLineViewData,
@@ -59,7 +60,7 @@ fun CreditLineCard(
     ledgerColors: LedgerColors,
     data: CreditLineViewData,
     onOutstandingInfoIconClick: (CreditLineViewData) -> Unit,
-    isLmsActivated: () -> Boolean
+    isLmsActivated: () -> Boolean?
 ) {
 
     Column(
@@ -84,7 +85,7 @@ fun CreditLineCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Outstanding",
+                text = stringResource(R.string.outstanding),
                 style = text12Sp(textColor = ledgerColors.TransactionDateColor),
                 maxLines = 1
             )
