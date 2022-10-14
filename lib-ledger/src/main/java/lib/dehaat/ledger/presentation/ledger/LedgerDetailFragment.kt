@@ -1,15 +1,16 @@
 package lib.dehaat.ledger.presentation.ledger
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.amazonaws.mobile.client.AWSMobileClient
-import com.dehaat.androidbase.helper.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import lib.dehaat.ledger.resources.LedgerTheme
 import lib.dehaat.ledger.util.NotificationHandler
 
 @AndroidEntryPoint
-class LedgerDetailActivity : ComponentActivity() {
+class LedgerDetailFragment : Fragment() {
 
     val viewModel: LedgerDetailViewModel by viewModels()
 
@@ -41,13 +42,10 @@ class LedgerDetailActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        args = getArgs(intent)
+        args = getArgs(arguments)
+        setLedgerLanguage()
 
-        args.language?.let {
-            setLedgerLanguage(it)
-        }
-
-        if (!LedgerSDK.isCurrentAppAvailable()) {
+        if (!LedgerSDK.isCurrentAppAvailable() && LedgerSDK.isDebug) {
             showToast(getString(R.string.initialise_ledger))
             finish()
             return
@@ -59,9 +57,16 @@ class LedgerDetailActivity : ComponentActivity() {
             return
         }
 
-        AWSMobileClient.getInstance().initialize(this).execute()
+        AWSMobileClient.getInstance().initialize(requireActivity()).execute()
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = ComposeView(requireContext()).apply {
         setContent {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             LedgerTheme {
                 LedgerNavigation(
                     dcName = args.dcName,
@@ -84,7 +89,7 @@ class LedgerDetailActivity : ComponentActivity() {
                                         setContentText(getString(R.string.invoice_download_success))
                                         setContentIntent(
                                             ledgerCallbacks.downloadInvoiceIntent.invoke(
-                                                this@LedgerDetailActivity,
+                                                requireActivity(),
                                                 it.filePath
                                             )
                                         )
@@ -108,8 +113,12 @@ class LedgerDetailActivity : ComponentActivity() {
         }
     }
 
-    private fun setLedgerLanguage(appLanguage: String) {
-        val locale = Locale(appLanguage)
+    private fun finish() = requireActivity().supportFragmentManager.popBackStack()
+
+    private fun showToast(message: String) = Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+
+    private fun setLedgerLanguage() {
+        val locale = Locale(LedgerSDK.locale)
         val res = this.resources
         val dm = res.displayMetrics
         val conf = res.configuration
@@ -120,29 +129,24 @@ class LedgerDetailActivity : ComponentActivity() {
 
     companion object {
         private const val KEY_DC_FINANCED = "KEY_DC_FINANCED"
-        private const val KEY_APP_LANGUAGE = "KEY_APP_LANGUAGE"
 
-        fun getArgs(intent: Intent) = Args(
-            partnerId = intent.getStringExtra(LedgerConstants.KEY_PARTNER_ID) ?: "",
-            dcName = intent.getStringExtra(LedgerConstants.KEY_DC_NAME) ?: "",
-            isDCFinanced = intent.getBooleanExtra(KEY_DC_FINANCED, false),
-            language = intent.getStringExtra(KEY_APP_LANGUAGE)
+        fun getArgs(intent: Bundle?) = Args(
+            partnerId = intent?.getString(LedgerConstants.KEY_PARTNER_ID) ?: "",
+            dcName = intent?.getString(LedgerConstants.KEY_DC_NAME) ?: "",
+            isDCFinanced = intent?.getBoolean(KEY_DC_FINANCED) ?: false
         )
 
         data class Args(
             val partnerId: String,
             val dcName: String,
-            val isDCFinanced: Boolean,
-            val language: String?
+            val isDCFinanced: Boolean
         ) {
-            fun build(context: Context) = Intent(
-                context,
-                LedgerDetailActivity::class.java
-            ).apply {
-                putExtra(LedgerConstants.KEY_PARTNER_ID, partnerId)
-                putExtra(LedgerConstants.KEY_DC_NAME, dcName)
-                putExtra(KEY_DC_FINANCED, isDCFinanced)
-                putExtra(KEY_APP_LANGUAGE, language)
+            fun build() = LedgerDetailFragment().apply {
+                arguments = Bundle().apply {
+                    putString(LedgerConstants.KEY_PARTNER_ID, partnerId)
+                    putString(LedgerConstants.KEY_DC_NAME, dcName)
+                    putBoolean(KEY_DC_FINANCED, isDCFinanced)
+                }
             }
         }
     }

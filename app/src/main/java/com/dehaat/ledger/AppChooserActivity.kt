@@ -4,42 +4,80 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentContainerView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.LedgerParentApp
 import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.callbacks.LedgerCallBack
-import lib.dehaat.ledger.presentation.ledger.LedgerDetailActivity
+import lib.dehaat.ledger.navigation.navigateTo
+import lib.dehaat.ledger.presentation.ledger.LedgerDetailFragment
 
+@AndroidEntryPoint
 class AppChooserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Dummy(
-                onClickDBAButton = { openDBA() },
-                onClickAIMSButton = { openAIMS() }
-            )
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = LEDGER_SELECTOR_ROUTE
+            ) {
+                composable(LEDGER_SELECTOR_ROUTE) {
+                    Dummy(
+                        onClickDBAButton = { openDBA(navController) },
+                        onClickAIMSButton = { openAIMS(navController) }
+                    )
+                }
+                composable(LEDGER_SCREEN_ROUTE) {
+                    FragmentContainer(
+                        modifier = Modifier,
+                        fragmentManager = supportFragmentManager,
+                        commit = {
+                            add(
+                                it,
+                                LedgerSDK.getLedgerFragment(
+                                    partnerId = "123456",
+                                    dcName = "DC DBA",
+                                    isDCFinanced = true
+                                )
+                            )
+                        }
+                    )
+                }
+            }
         }
     }
 
-    private fun openDBA() {
+    private fun openDBA(navController: NavHostController) {
         LedgerSDK.init(
             applicationContext,
             LedgerParentApp.DBA(
@@ -58,7 +96,7 @@ class AppChooserActivity : AppCompatActivity() {
                             0,
                             Intent(
                                 this,
-                                LedgerDetailActivity::class.java
+                                LedgerDetailFragment::class.java
                             ).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) },
                             -PendingIntent.FLAG_ONE_SHOT
                         )
@@ -77,19 +115,13 @@ class AppChooserActivity : AppCompatActivity() {
         )
 
         try {
-            LedgerSDK.openLedger(
-                context = this,
-                partnerId = "123456",
-                dcName = "DC DBA",
-                isDCFinanced = true,
-                language = "en"
-            )
+            navController.navigateTo(LEDGER_SCREEN_ROUTE, bundleOf())
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun openAIMS() {
+    private fun openAIMS(navController: NavHostController) {
         LedgerSDK.init(
             applicationContext,
             LedgerParentApp.AIMS(
@@ -100,7 +132,7 @@ class AppChooserActivity : AppCompatActivity() {
                         0,
                         Intent(
                             this,
-                            LedgerDetailActivity::class.java
+                            LedgerDetailFragment::class.java
                         ).apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) },
                         -PendingIntent.FLAG_ONE_SHOT
                     )
@@ -117,12 +149,11 @@ class AppChooserActivity : AppCompatActivity() {
             debugMode = true
         )
         try {
-            LedgerSDK.openLedger(
-                context = this,
+            navController.navigateTo(LEDGER_SCREEN_ROUTE, bundleOf())
+            LedgerSDK.getLedgerFragment(
                 partnerId = "123456",
                 dcName = "DC AIMS",
-                isDCFinanced = true,
-                language = "hi"
+                isDCFinanced = true
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -133,6 +164,10 @@ class AppChooserActivity : AppCompatActivity() {
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
+    companion object {
+        const val LEDGER_SELECTOR_ROUTE = "ledger_selector"
+        const val LEDGER_SCREEN_ROUTE = "ledger_screen"
+    }
 }
 
 @Composable
@@ -172,4 +207,26 @@ fun Dummy(onClickDBAButton: () -> Unit, onClickAIMSButton: () -> Unit) {
             maxLines = 1
         )
     }
+}
+
+@Composable
+fun FragmentContainer(
+    modifier: Modifier,
+    fragmentManager: FragmentManager,
+    commit: FragmentTransaction.(containerId: Int) -> Unit
+) {
+    val containerId by remember { mutableStateOf(View.generateViewId()) }
+
+    AndroidView(
+        modifier = modifier,
+        factory = { context ->
+            fragmentManager.findFragmentById(containerId)?.view
+                ?.also { (it.parent as? ViewGroup)?.removeView(it) }
+                ?: FragmentContainerView(context)
+                    .apply { id = containerId }
+                    .also {
+                        fragmentManager.commit { commit(it.id) }
+                    }
+        }
+    )
 }

@@ -5,7 +5,7 @@ import android.os.Environment
 import androidx.annotation.DrawableRes
 import com.facebook.drawee.backends.pipeline.Fresco
 import java.io.File
-import lib.dehaat.ledger.presentation.ledger.LedgerDetailActivity
+import lib.dehaat.ledger.presentation.ledger.LedgerDetailFragment
 
 object LedgerSDK {
     internal lateinit var currentApp: LedgerParentApp
@@ -13,40 +13,40 @@ object LedgerSDK {
     internal var locale: String = "en"
     internal var appIcon: Int = 0
         private set
+    val isDBA: Boolean
+        get() = currentApp is LedgerParentApp.DBA
+    var isDebug: Boolean = false
+        private set
 
     fun init(
         context: Context,
         app: LedgerParentApp,
         bucket: String,
         @DrawableRes appIcon: Int,
-        debugMode: Boolean
+        debugMode: Boolean,
+        language: String? = null
     ) {
         currentApp = app
         this.bucket = bucket
         this.appIcon = appIcon
         this.isDebug = debugMode
+        language?.let { lang -> locale = lang }
         Fresco.initialize(context)
     }
 
     fun isCurrentAppAvailable() = ::currentApp.isInitialized && ::bucket.isInitialized
 
     @Throws(Exception::class)
-    fun openLedger(
-        context: Context,
+    fun getLedgerFragment(
         partnerId: String,
         dcName: String,
-        isDCFinanced: Boolean,
-        language: String? = null
+        isDCFinanced: Boolean
     ) = if (isCurrentAppAvailable()) {
-        LedgerDetailActivity.Companion.Args(
+        LedgerDetailFragment.Companion.Args(
             partnerId = partnerId,
             dcName = dcName,
-            isDCFinanced = isDCFinanced,
-            language = language
-        ).also {
-            language?.let { lang -> locale = lang }
-            context.startActivity(it.build(context))
-        }
+            isDCFinanced = isDCFinanced
+        ).build()
     } else {
         throw Exception("Ledger not initialised Exception")
     }
@@ -64,13 +64,4 @@ object LedgerSDK {
         }
         null
     }
-
-    val isDBA: Boolean
-        get() = currentApp is LedgerParentApp.DBA
-
-    val isAIMS: Boolean
-        get() = currentApp is LedgerParentApp.AIMS
-
-    var isDebug: Boolean = false
-        private set
 }
