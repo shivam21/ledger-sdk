@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.launch
+import lib.dehaat.ledger.framework.model.outstanding.OutstandingData
 import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.navigation.DetailPageNavigationCallback
@@ -33,6 +34,7 @@ import lib.dehaat.ledger.presentation.ledger.details.totaloutstanding.TotalOutst
 import lib.dehaat.ledger.presentation.ledger.revamp.state.UIState
 import lib.dehaat.ledger.presentation.ledger.revamp.state.transactions.ui.TransactionsScreen
 import lib.dehaat.ledger.presentation.ledger.ui.component.LedgerHeaderScreen
+import lib.dehaat.ledger.presentation.ledger.ui.component.OutStandingPaymentView
 import lib.dehaat.ledger.presentation.ledger.ui.component.TotalOutstandingCalculation
 import lib.dehaat.ledger.presentation.model.transactions.DaysToFilter
 import lib.dehaat.ledger.presentation.model.transactions.getNumberOfDays
@@ -127,7 +129,13 @@ fun RevampLedgerScreen(
                     VerticalNestedScrollView(
                         state = nestedScrollViewState,
                         header = {
+                            val outstanding by LedgerSDK.outstandingDataFlow.collectAsState(
+                                OutstandingData(false)
+                            )
                             Column {
+                                if (outstanding.showDialog) {
+                                    OutStandingPaymentView(outstanding.amount)
+                                }
                                 uiState.summaryViewData?.let {
                                     if (it.totalAvailableCreditLimit.toDouble() < 0.0)
                                         it.minimumRepaymentAmount?.let {

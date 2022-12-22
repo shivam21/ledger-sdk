@@ -4,10 +4,16 @@ import android.content.Context
 import android.os.Environment
 import androidx.annotation.DrawableRes
 import com.facebook.drawee.backends.pipeline.Fresco
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import lib.dehaat.ledger.framework.model.outstanding.OutstandingData
 import lib.dehaat.ledger.presentation.ledger.LedgerDetailActivity
 import java.io.File
+import java.math.BigDecimal
 
 object LedgerSDK {
+
+    internal val outstandingDataFlow = MutableStateFlow(OutstandingData(false))
     internal lateinit var currentApp: LedgerParentApp
     internal lateinit var bucket: String
     internal var locale: String = "en"
@@ -63,6 +69,10 @@ object LedgerSDK {
             currentApp.ledgerCallBack.exceptionHandler(e)
         }
         null
+    }
+
+    suspend fun updateOutStanding(showDialog: Boolean, amount: BigDecimal?) {
+        outstandingDataFlow.emit(OutstandingData(showDialog, amount))
     }
 
     val isDBA: Boolean

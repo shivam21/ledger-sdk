@@ -133,4 +133,7 @@
     <string name="payment_will_be_processed_within_1_2_days">Payment will be processed within 1–2 days</string>
     <string name="under_process">Under Process</string>
     <string name="your_order_limit_is_exhausted_please_pay_minimum">Your order limit is exhausted. Please pay minimum Rs %s immediately</string>
+    <string name="some_features_locked">Some app features are locked</string>
+    <string name="unpaid_outstanding">As you have an unpaid outstanding of  ₹ %s</string>
+    <string name="more_than_90_days">for more than 90 days.</string>
 </resources>

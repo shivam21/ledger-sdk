@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -16,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lib.dehaat.ledger.R
 import lib.dehaat.ledger.datasource.DummyDataSource
+import lib.dehaat.ledger.framework.model.outstanding.OutstandingData
 import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.themes.AIMSColors
 import lib.dehaat.ledger.initializer.themes.LedgerColors
@@ -79,8 +82,10 @@ fun CreditSummaryView(
             )
             .fillMaxWidth()
     ) {
-
-        if (creditSummaryData?.isOrderingBlocked == true) {
+        val outstanding by LedgerSDK.outstandingDataFlow.collectAsState()
+        if (outstanding.showDialog) {
+            OutStandingPaymentView(outstanding.amount)
+        }else if (creditSummaryData?.isOrderingBlocked == true) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()

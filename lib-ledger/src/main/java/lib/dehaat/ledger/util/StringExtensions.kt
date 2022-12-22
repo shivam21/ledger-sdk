@@ -1,6 +1,11 @@
 package lib.dehaat.ledger.util
 
+import com.dehaat.androidbase.helper.tryCatchWithReturn
+import com.dehaat.androidbase.utils.NumberUtilities
+import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.formatDecimal
+import java.text.NumberFormat
+import java.util.*
 
 fun String?.nullToValue(value: String = "--") = this ?: value
 
@@ -43,3 +48,9 @@ private fun String.getAmountWithoutTrailingZeroes() = if (this.endsWith(".00")) 
 fun String?.getAmountInRupeesOrDash(): String = this?.let {
     it.getAmountInRupees()
 } ?: "-"
+
+fun String.formatAmount()= tryCatchWithReturn(this){
+    val formatter = NumberFormat.getNumberInstance(Locale(LedgerSDK.locale, "in"))
+    formatter.maximumFractionDigits = 2
+    return formatter.format(toDouble())
+}
