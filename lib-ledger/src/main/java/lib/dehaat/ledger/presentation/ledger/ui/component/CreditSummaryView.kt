@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import lib.dehaat.ledger.R
 import lib.dehaat.ledger.datasource.DummyDataSource
-import lib.dehaat.ledger.framework.model.outstanding.OutstandingData
 import lib.dehaat.ledger.initializer.LedgerSDK
 import lib.dehaat.ledger.initializer.themes.AIMSColors
 import lib.dehaat.ledger.initializer.themes.LedgerColors
@@ -85,7 +84,7 @@ fun CreditSummaryView(
         val outstanding by LedgerSDK.outstandingDataFlow.collectAsState()
         if (outstanding.showDialog) {
             OutStandingPaymentView(outstanding.amount)
-        }else if (creditSummaryData?.isOrderingBlocked == true) {
+        } else if (creditSummaryData?.isOrderingBlocked == true) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth()

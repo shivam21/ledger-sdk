@@ -124,4 +124,7 @@
     <string name="payment_will_be_processed_within_1_2_days">आपका भुगतान १-२ दिन में प्रॉसेस हो जाएगा</string>
     <string name="under_process">अंडर प्रॉसेस</string>
     <string name="your_order_limit_is_exhausted_please_pay_minimum">आपकी ऑर्डर लिमिट पूरी हो गई है। कृपया न्यूनतम रु. %s तुरंत भुगतान करें।</string>
+    <string name="some_features_locked">कुछ ऐप सुविधाएं लॉक हैं</string>
+    <string name="unpaid_outstanding">चूंकि आपने ₹ %s</string>
+    <string name="more_than_90_days">का बकाया 90 से अधिक दिनों से भुगतान नहीं किया है</string>
 </resources>
