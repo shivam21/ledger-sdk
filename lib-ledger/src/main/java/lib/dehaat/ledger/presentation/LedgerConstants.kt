@@ -9,4 +9,5 @@ object LedgerConstants {
     const val IB_REQUEST_IDENTIFIER = "IB-Request-Identifier"
     const val EMPTY_API_RESPONSE = "Null / EMPTY API response"
     const val UNREALIZED_PAYMENT = "unrealizedPayment"
+    const val ABS_AMOUNT = "abs_amount"
 }

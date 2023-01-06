@@ -183,6 +183,13 @@ class LedgerDataSource @Inject constructor(
         }
     }
 
+    override suspend fun getABSTransactions(partnerId: String, limit: Int, offset: Int) = callAPI(
+        dispatcher,
+        { apiService.getABSTransactions(partnerId, limit, offset) }
+    ) {
+        it?.transactions?.let { transactions -> mapper.toABSTransactionEntityList(transactions) }
+    }
+
     private suspend fun <D, C> callAPI(
         dispatchers: IDispatchers,
         apiCall: suspend () -> Response<D>,

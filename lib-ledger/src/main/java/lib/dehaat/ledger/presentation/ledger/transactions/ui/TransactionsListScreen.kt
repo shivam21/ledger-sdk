@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -29,6 +30,7 @@ import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.initializer.toDateMonthName
 import lib.dehaat.ledger.navigation.DetailPageNavigationCallback
+import lib.dehaat.ledger.presentation.LedgerConstants.ABS_AMOUNT
 import lib.dehaat.ledger.presentation.LedgerDetailViewModel
 import lib.dehaat.ledger.presentation.common.UiEvent
 import lib.dehaat.ledger.presentation.ledger.components.NoDataFound
@@ -38,6 +40,7 @@ import lib.dehaat.ledger.presentation.ledger.details.invoice.InvoiceDetailViewMo
 import lib.dehaat.ledger.presentation.ledger.details.payments.PaymentDetailViewModel
 import lib.dehaat.ledger.presentation.ledger.transactions.LedgerTransactionViewModel
 import lib.dehaat.ledger.presentation.ledger.transactions.constants.TransactionType
+import lib.dehaat.ledger.presentation.ledger.transactions.ui.component.AbsBanner
 import lib.dehaat.ledger.presentation.ledger.transactions.ui.component.TransactionInvoiceItem
 import lib.dehaat.ledger.presentation.ledger.ui.component.FilterStrip
 import lib.dehaat.ledger.presentation.model.transactions.toStartAndEndDates
@@ -58,10 +61,15 @@ fun TransactionsListScreen(
     val transactions = viewModel.transactionsList.collectAsLazyPagingItems()
     val detailPageState by ledgerDetailViewModel.uiState.collectAsState()
     val filterState = detailPageState.selectedDaysFilter
+    val abs = detailPageState.transactionSummaryViewData?.abs
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
 
     Column {
+        AbsBanner(abs) {
+            detailPageNavigationCallback.navigateToABSDetailPage(it)
+        }
+
         FilterStrip(
             modifier = Modifier.padding(horizontal = 18.dp),
             ledgerColors = ledgerColors,

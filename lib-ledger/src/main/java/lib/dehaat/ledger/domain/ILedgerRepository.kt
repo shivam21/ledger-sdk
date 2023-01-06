@@ -1,6 +1,7 @@
 package lib.dehaat.ledger.domain
 
 import com.cleanarch.base.entity.result.api.APIResultEntity
+import lib.dehaat.ledger.entities.abs.ABSTransactionEntity
 import lib.dehaat.ledger.entities.creditlines.CreditLineEntity
 import lib.dehaat.ledger.entities.creditsummary.CreditSummaryEntity
 import lib.dehaat.ledger.entities.detail.creditnote.CreditNoteDetailEntity
@@ -85,4 +86,11 @@ interface ILedgerRepository {
         offset: Int,
         isInterestApproached: Boolean
     ): APIResultEntity<List<InvoiceListEntity>?>
+
+    suspend fun getABSTransactions(
+        partnerId: String,
+        limit: Int,
+        offset: Int
+    ): APIResultEntity<List<ABSTransactionEntity>?>
+
 }

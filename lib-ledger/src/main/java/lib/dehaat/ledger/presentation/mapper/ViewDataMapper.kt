@@ -1,10 +1,12 @@
 package lib.dehaat.ledger.presentation.mapper
 
 import lib.dehaat.ledger.entities.revamp.creditsummary.CreditSummaryEntityV2
+import lib.dehaat.ledger.entities.transactionsummary.ABSEntity
 import lib.dehaat.ledger.entities.transactionsummary.TransactionSummaryEntity
 import lib.dehaat.ledger.presentation.ledger.revamp.state.credits.availablecreditlimit.AvailableCreditLimitViewState
 import lib.dehaat.ledger.presentation.ledger.revamp.state.credits.outstandingcreditlimit.OutstandingCreditLimitViewState
 import lib.dehaat.ledger.presentation.model.revamp.SummaryViewData
+import lib.dehaat.ledger.presentation.model.revamp.transactionsummary.ABSViewData
 import lib.dehaat.ledger.presentation.model.revamp.transactionsummary.TransactionSummaryViewData
 import lib.dehaat.ledger.util.getRoundedAmountInRupees
 import javax.inject.Inject
@@ -61,6 +63,11 @@ class ViewDataMapper @Inject constructor() {
     ) = TransactionSummaryViewData(
         purchaseAmount = entity.purchaseAmount.getRoundedAmountInRupees(),
         paymentAmount = entity.paymentAmount.getRoundedAmountInRupees(),
-        interestAmount = entity.interestAmount.getRoundedAmountInRupees()
+        interestAmount = entity.interestAmount.getRoundedAmountInRupees(),
+        abs = toABSViewData(entity.abs)
     )
+
+    private fun toABSViewData(abs: ABSEntity?) = abs?.run {
+        ABSViewData(amount, lastMoveScheme, showBanner)
+    }
 }

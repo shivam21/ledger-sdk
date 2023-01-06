@@ -1,5 +1,6 @@
 package lib.dehaat.ledger.framework.network
 
+import lib.dehaat.ledger.framework.model.abs.ResponseABSTransactions
 import lib.dehaat.ledger.framework.model.creditlines.ResponseCreditLines
 import lib.dehaat.ledger.framework.model.creditsummary.ResponseCreditSummary
 import lib.dehaat.ledger.framework.model.detail.creditnote.ResponseCreditNoteDetail
@@ -105,4 +106,11 @@ interface LedgerAPIService {
         @Query("offset") offset: Int,
         @Query("filter") filter: String
     ): Response<ResponseInvoiceList>
+
+    @GET("/finance/accounting/abs-transactions")
+    suspend fun getABSTransactions(
+        @Query("partner_id") partnerId: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): Response<ResponseABSTransactions>
 }

@@ -621,3 +621,16 @@ fun textSemiBold14Sp(
     color = textColor,
     fontFamily = notoSansDisplayMedium
 )
+
+@Composable
+fun textSemiBold16Sp(
+    textColor: Color = TextBlack,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    lineHeight: TextUnit = 24.sp
+) = TextStyle(
+    fontSize = 16.sp,
+    lineHeight = lineHeight,
+    fontWeight = fontWeight,
+    color = textColor,
+    fontFamily = notoSansDisplayMedium
+)

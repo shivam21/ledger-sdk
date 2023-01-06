@@ -32,5 +32,6 @@ class DBAColors : LedgerColors(
     FilterDialogDateBGColor = Color(0xFFF1F3F8), // TODO check on DBA
     FilterIconsColor = PrimaryGreen,
     LedgerPrimaryColor = PrimaryGreen,
-    ActionBarColor = Color(0XFFF2F2F2)
+    ActionBarColor = Color(0XFFF2F2F2),
+    AbsAmountColor = Color(0XFF00662C)
 )

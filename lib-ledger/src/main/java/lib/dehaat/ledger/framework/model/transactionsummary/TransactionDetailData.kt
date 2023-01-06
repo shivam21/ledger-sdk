@@ -10,5 +10,19 @@ data class TransactionDetailData(
     @Json(name = "payment_amount")
     val paymentAmount: String,
     @Json(name = "interest_amount")
-    val interestAmount: String?
+    val interestAmount: String?,
+    @Json(name = "abs")
+    val abs: ABSData?
 )
+
+@JsonClass(generateAdapter = true)
+data class ABSData(
+    @Json(name = "amount")
+    val amount: Double?,
+    @Json(name = "last_move_scheme")
+    val lastMoveScheme: String?,
+    @Json(name = "show_banner")
+    val showBanner: Boolean?
+)
+
+

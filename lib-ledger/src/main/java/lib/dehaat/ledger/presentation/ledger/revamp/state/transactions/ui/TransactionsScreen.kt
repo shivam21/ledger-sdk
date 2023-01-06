@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -51,7 +52,7 @@ fun TransactionsScreen(
             TransactionListHeader(
                 ledgerViewModel,
                 showFilterSheet
-            )
+            ){ detailPageNavigationCallback.navigateToABSDetailPage(it) }
         }
         items(transactions) { transaction ->
             transaction?.let {

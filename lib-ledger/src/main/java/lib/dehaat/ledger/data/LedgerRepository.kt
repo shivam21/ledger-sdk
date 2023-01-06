@@ -111,4 +111,10 @@ class LedgerRepository @Inject constructor(private val networkSource: ILedgerDat
         offset,
         isInterestApproached
     )
+
+    override suspend fun getABSTransactions(
+        partnerId: String,
+        limit: Int,
+        offset: Int
+    ) = networkSource.getABSTransactions(partnerId, limit, offset)
 }

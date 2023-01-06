@@ -89,6 +89,14 @@ fun navigateToRevampWeeklyInterestDetailPage(
     args = args
 )
 
+fun navigateToABSDetailPage(
+    navController: NavHostController,
+    args: Bundle
+) = navController.navigateTo(
+    route = LedgerRoutes.ABSDetailScreen.screen,
+    args = args
+)
+
 fun NavController.navigateTo(
     route: String,
     args: Bundle,

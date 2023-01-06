@@ -15,6 +15,7 @@ import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.presentation.LedgerConstants
 import lib.dehaat.ledger.presentation.LedgerDetailViewModel
 import lib.dehaat.ledger.presentation.RevampLedgerViewModel
+import lib.dehaat.ledger.presentation.ledger.abs.ABSDetailScreen
 import lib.dehaat.ledger.presentation.ledger.details.availablecreditlimit.AvailableCreditLimitScreenArgs
 import lib.dehaat.ledger.presentation.ledger.details.availablecreditlimit.ui.AvailableCreditLimitDetailsScreen
 import lib.dehaat.ledger.presentation.ledger.details.creditnote.CreditNoteDetailViewModel
@@ -260,6 +261,21 @@ fun LedgerNavigation(
                 navController.popBackStack()
             }
         }
+
+        navBaseComposable(
+            route = LedgerRoutes.ABSDetailScreen.screen,
+            arguments = listOf(
+                navArgument(LedgerConstants.KEY_PARTNER_ID) {
+                    type = NavType.StringType
+                    defaultValue = partnerId
+                }
+            ),
+            logScreenName = ledgerCallbacks.firebaseScreenLogger
+        ) {
+            ABSDetailScreen(ledgerColors = ledgerColors, onBackPress = {
+                navController.popBackStack()
+            })
+        }
     }
 }
 
@@ -315,5 +331,9 @@ fun provideDetailPageNavCallBacks(
 
     override fun navigateToRevampWeeklyInterestDetailPage(args: Bundle) {
         navigateToRevampWeeklyInterestDetailPage(navController, args)
+    }
+
+    override fun navigateToABSDetailPage(args: Bundle) {
+        navigateToABSDetailPage(navController, args)
     }
 }

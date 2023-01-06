@@ -1,5 +1,7 @@
 package lib.dehaat.ledger.framework.mapper
 
+import com.dehaat.androidbase.helper.orFalse
+import lib.dehaat.ledger.entities.abs.ABSTransactionEntity
 import lib.dehaat.ledger.entities.creditlines.CreditLineEntity
 import lib.dehaat.ledger.entities.creditsummary.CreditEntity
 import lib.dehaat.ledger.entities.creditsummary.CreditSummaryEntity
@@ -16,11 +18,17 @@ import lib.dehaat.ledger.entities.detail.invoice.invoicedownload.InvoiceDownload
 import lib.dehaat.ledger.entities.detail.payment.PaymentDetailEntity
 import lib.dehaat.ledger.entities.revamp.creditnote.CreditNoteDetailsEntity
 import lib.dehaat.ledger.entities.revamp.creditsummary.CreditSummaryEntityV2
-import lib.dehaat.ledger.entities.revamp.invoice.*
+import lib.dehaat.ledger.entities.revamp.invoice.CreditNoteEntity
+import lib.dehaat.ledger.entities.revamp.invoice.InvoiceDataEntity
+import lib.dehaat.ledger.entities.revamp.invoice.ProductEntityV2
+import lib.dehaat.ledger.entities.revamp.invoice.ProductsInfoEntityV2
+import lib.dehaat.ledger.entities.revamp.invoice.SummaryEntityV2
 import lib.dehaat.ledger.entities.revamp.invoicelist.InvoiceListEntity
 import lib.dehaat.ledger.entities.revamp.transaction.TransactionEntityV2
 import lib.dehaat.ledger.entities.transactions.TransactionEntity
+import lib.dehaat.ledger.entities.transactionsummary.ABSEntity
 import lib.dehaat.ledger.entities.transactionsummary.TransactionSummaryEntity
+import lib.dehaat.ledger.framework.model.abs.ABSTransaction
 import lib.dehaat.ledger.framework.model.creditlines.CreditLine
 import lib.dehaat.ledger.framework.model.creditlines.CreditLineData
 import lib.dehaat.ledger.framework.model.creditsummary.Credit
@@ -43,7 +51,9 @@ import lib.dehaat.ledger.framework.model.revamp.invoicelist.InterestInvoice
 import lib.dehaat.ledger.framework.model.revamp.transactions.TransactionData
 import lib.dehaat.ledger.framework.model.transactions.Transaction
 import lib.dehaat.ledger.framework.model.transactions.TransactionsData
+import lib.dehaat.ledger.framework.model.transactionsummary.ABSData
 import lib.dehaat.ledger.framework.model.transactionsummary.TransactionDetailData
+import lib.dehaat.ledger.presentation.ledger.ui.component.orZero
 import javax.inject.Inject
 
 typealias NetworkPaymentDetailSummary = lib.dehaat.ledger.framework.model.detail.payment.Summary
@@ -95,9 +105,13 @@ class LedgerFrameworkMapper @Inject constructor() {
         TransactionSummaryEntity(
             purchaseAmount = purchaseAmount,
             paymentAmount = paymentAmount,
-            interestAmount = interestAmount
+            interestAmount = interestAmount,
+            abs = toABSEntity(abs)
         )
     }
+
+    private fun toABSEntity(abs: ABSData?) =
+        abs?.run { ABSEntity(amount.orZero(), lastMoveScheme, showBanner.orFalse()) }
 
     fun toCreditLineDataEntity(data: CreditLineData) = data.creditLines.map {
         toCreditLineEntity(it)
@@ -407,5 +421,13 @@ class LedgerFrameworkMapper @Inject constructor() {
             type = it.type,
             interestDays = it.interestDays
         )
+    }
+
+    fun toABSTransactionEntityList(transactions: List<ABSTransaction>) = transactions.map {
+        toABSTransactionEntity(it)
+    }
+
+    private fun toABSTransactionEntity(transaction: ABSTransaction) = with(transaction) {
+        ABSTransactionEntity(amount, orderingDate, schemeName)
     }
 }
