@@ -18,19 +18,18 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.dehaat.androidbase.helper.isTrue
 import com.dehaat.androidbase.helper.showToast
 import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.themes.LedgerColors
 import lib.dehaat.ledger.initializer.toDateMonthName
 import lib.dehaat.ledger.navigation.DetailPageNavigationCallback
-import lib.dehaat.ledger.presentation.LedgerConstants.ABS_AMOUNT
 import lib.dehaat.ledger.presentation.LedgerDetailViewModel
 import lib.dehaat.ledger.presentation.common.UiEvent
 import lib.dehaat.ledger.presentation.ledger.components.NoDataFound
@@ -48,115 +47,117 @@ import lib.dehaat.ledger.resources.textBold14Sp
 
 @Composable
 fun TransactionsListScreen(
-    ledgerColors: LedgerColors,
-    detailPageNavigationCallback: DetailPageNavigationCallback,
-    viewModel: LedgerTransactionViewModel = hiltViewModel(),
-    ledgerDetailViewModel: LedgerDetailViewModel,
-    openDaysFilter: () -> Unit,
-    openRangeFilter: () -> Unit,
-    onError: (Exception) -> Unit,
-    isLmsActivated: () -> Boolean?
+	ledgerColors: LedgerColors,
+	detailPageNavigationCallback: DetailPageNavigationCallback,
+	viewModel: LedgerTransactionViewModel = hiltViewModel(),
+	ledgerDetailViewModel: LedgerDetailViewModel,
+	openDaysFilter: () -> Unit,
+	openRangeFilter: () -> Unit,
+	onError: (Exception) -> Unit,
+	isLmsActivated: () -> Boolean?
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val transactions = viewModel.transactionsList.collectAsLazyPagingItems()
-    val detailPageState by ledgerDetailViewModel.uiState.collectAsState()
-    val filterState = detailPageState.selectedDaysFilter
-    val abs = detailPageState.transactionSummaryViewData?.abs
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val context = LocalContext.current
+	val uiState by viewModel.uiState.collectAsState()
+	val transactions = viewModel.transactionsList.collectAsLazyPagingItems()
+	val detailPageState by ledgerDetailViewModel.uiState.collectAsState()
+	val filterState = detailPageState.selectedDaysFilter
+	val abs = detailPageState.transactionSummaryViewData?.abs
+	val lifecycleOwner = LocalLifecycleOwner.current
+	val context = LocalContext.current
 
-    Column {
-        AbsBanner(abs) {
-            detailPageNavigationCallback.navigateToABSDetailPage(it)
-        }
+	Column {
+		if (abs?.showBanner.isTrue()) {
+			AbsBanner(abs, viewModel.ledgerAnalytics) {
+				detailPageNavigationCallback.navigateToABSDetailPage(it)
+			}
+		}
 
-        FilterStrip(
-            modifier = Modifier.padding(horizontal = 18.dp),
-            ledgerColors = ledgerColors,
-            withPenalty = uiState.onlyPenaltyInvoices,
-            onWithPenaltyChange = {
-                viewModel.applyOnlyPenaltyInvoicesFilter(it)
-            },
-            onDaysToFilterIconClick = openDaysFilter,
-            onDateRangeFilterIconClick = openRangeFilter,
-            isLmsActivated = isLmsActivated
-        )
+		FilterStrip(
+			modifier = Modifier.padding(horizontal = 18.dp),
+			ledgerColors = ledgerColors,
+			withPenalty = uiState.onlyPenaltyInvoices,
+			onWithPenaltyChange = {
+				viewModel.applyOnlyPenaltyInvoicesFilter(it)
+			},
+			onDaysToFilterIconClick = openDaysFilter,
+			onDateRangeFilterIconClick = openRangeFilter,
+			isLmsActivated = isLmsActivated
+		)
 
-        filterState?.toStartAndEndDates()?.let {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(
-                    id = R.string.untill,
-                    it.first.toDateMonthName(),
-                    it.second.toDateMonthName()
-                ),
-                textAlign = TextAlign.Center,
-                style = textBold14Sp()
-            )
-        }
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(16.dp),
-        ) {
-            items(transactions) { data ->
-                data?.let {
-                    TransactionInvoiceItem(data = it, ledgerColors = ledgerColors) { transaction ->
-                        when (transaction.type) {
-                            TransactionType.PAYMENT -> detailPageNavigationCallback.navigateToPaymentDetailPage(
-                                PaymentDetailViewModel.getArgs(transaction)
-                            )
-                            TransactionType.CREDIT_NOTE -> detailPageNavigationCallback.navigateToCreditNoteDetailPage(
-                                CreditNoteDetailViewModel.getArgs(transaction)
-                            )
-                            TransactionType.INVOICE -> {
-                                transaction.erpId?.let {
-                                    detailPageNavigationCallback.navigateToInvoiceDetailPage(
-                                        InvoiceDetailViewModel.getArgs(transaction)
-                                    )
-                                }
-                            }
-                            else -> Unit
-                        }
-                    }
-                    Divider(color = Color.Transparent, thickness = 8.dp)
-                }
-            }
+		filterState?.toStartAndEndDates()?.let {
+			Text(
+				modifier = Modifier.fillMaxWidth(),
+				text = stringResource(
+					id = R.string.untill,
+					it.first.toDateMonthName(),
+					it.second.toDateMonthName()
+				),
+				textAlign = TextAlign.Center,
+				style = textBold14Sp()
+			)
+		}
+		LazyColumn(
+			modifier = Modifier.fillMaxWidth(),
+			contentPadding = PaddingValues(16.dp),
+		) {
+			items(transactions) { data ->
+				data?.let {
+					TransactionInvoiceItem(data = it, ledgerColors = ledgerColors) { transaction ->
+						when (transaction.type) {
+							TransactionType.PAYMENT -> detailPageNavigationCallback.navigateToPaymentDetailPage(
+								PaymentDetailViewModel.getArgs(transaction)
+							)
+							TransactionType.CREDIT_NOTE -> detailPageNavigationCallback.navigateToCreditNoteDetailPage(
+								CreditNoteDetailViewModel.getArgs(transaction)
+							)
+							TransactionType.INVOICE -> {
+								transaction.erpId?.let {
+									detailPageNavigationCallback.navigateToInvoiceDetailPage(
+										InvoiceDetailViewModel.getArgs(transaction)
+									)
+								}
+							}
+							else -> Unit
+						}
+					}
+					Divider(color = Color.Transparent, thickness = 8.dp)
+				}
+			}
 
-            transactions.apply {
-                when {
-                    loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading -> {
-                        item { ShowProgress(ledgerColors) }
-                    }
-                    loadState.append is LoadState.NotLoading && loadState.append.endOfPaginationReached && itemCount == 0 -> {
-                        item { NoDataFound {} }
-                    }
-                }
-            }
-        }
-    }
-    LaunchedEffect(Unit) {
-        viewModel.uiEvent.flowWithLifecycle(
-            lifecycleOwner.lifecycle,
-            Lifecycle.State.STARTED
-        ).collect { event ->
-            when (event) {
-                is UiEvent.ShowSnackbar -> {
-                    context.showToast(event.message)
-                }
-                is UiEvent.RefreshList -> {
-                    transactions.refresh()
-                }
-                else -> Unit
-            }
-        }
-    }
+			transactions.apply {
+				when {
+					loadState.refresh is LoadState.Loading || loadState.append is LoadState.Loading -> {
+						item { ShowProgress(ledgerColors) }
+					}
+					loadState.append is LoadState.NotLoading && loadState.append.endOfPaginationReached && itemCount == 0 -> {
+						item { NoDataFound {} }
+					}
+				}
+			}
+		}
+	}
+	LaunchedEffect(Unit) {
+		viewModel.uiEvent.flowWithLifecycle(
+			lifecycleOwner.lifecycle,
+			Lifecycle.State.STARTED
+		).collect { event ->
+			when (event) {
+				is UiEvent.ShowSnackbar -> {
+					context.showToast(event.message)
+				}
+				is UiEvent.RefreshList -> {
+					transactions.refresh()
+				}
+				else -> Unit
+			}
+		}
+	}
 
-    LaunchedEffect(Unit) {
-        ledgerDetailViewModel.selectedDaysToFilterEvent.flowWithLifecycle(
-            lifecycleOwner.lifecycle,
-            Lifecycle.State.STARTED
-        ).collect { event ->
-            viewModel.applyDaysFilter(event)
-        }
-    }
+	LaunchedEffect(Unit) {
+		ledgerDetailViewModel.selectedDaysToFilterEvent.flowWithLifecycle(
+			lifecycleOwner.lifecycle,
+			Lifecycle.State.STARTED
+		).collect { event ->
+			viewModel.applyDaysFilter(event)
+		}
+	}
 }

@@ -32,6 +32,7 @@ class RevampLedgerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getCreditSummaryUseCase: GetCreditSummaryUseCase,
     private val getTransactionSummaryUseCase: GetTransactionSummaryUseCase,
+    val ledgerAnalytics: LibLedgerAnalytics,
     private val mapper: ViewDataMapper
 ) : BaseViewModel() {
 
