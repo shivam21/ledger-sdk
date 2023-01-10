@@ -13,6 +13,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import lib.dehaat.ledger.presentation.LibLedgerAnalytics
 import okhttp3.Dispatcher
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -156,4 +157,7 @@ class AppDIModule {
 
     @Provides
     fun provideDispatchers(): IDispatchers = Dispatchers()
+
+    @Provides
+    fun provideAnalytics(libLedgerAnalyticsImpl:LibLedgerAnalyticsImpl): LibLedgerAnalytics = libLedgerAnalyticsImpl
 }
