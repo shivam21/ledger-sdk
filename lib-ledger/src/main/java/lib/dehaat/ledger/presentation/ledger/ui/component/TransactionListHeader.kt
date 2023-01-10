@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.dehaat.androidbase.helper.isTrue
 import lib.dehaat.ledger.R
 import lib.dehaat.ledger.initializer.toDateMonthYear
 import lib.dehaat.ledger.presentation.RevampLedgerViewModel
@@ -27,49 +28,50 @@ import lib.dehaat.ledger.resources.textSubHeadingS3
 
 @Composable
 fun TransactionListHeader(
-    ledgerViewModel: RevampLedgerViewModel,
-    onFilterClick: () -> Unit,
-    openABSDetailScreen: (Bundle) -> Unit
+	ledgerViewModel: RevampLedgerViewModel,
+	onFilterClick: () -> Unit,
+	openABSDetailScreen: (Bundle) -> Unit
 ) = Column(
-    modifier = Modifier
+	modifier = Modifier
         .fillMaxWidth()
         .background(Color.White)
 ) {
-    val transactionUIState by ledgerViewModel.transactionUIState.collectAsState()
-    val uiState = ledgerViewModel.uiState.collectAsState()
-    val filters = uiState.value.appliedFilter
-    val abs = transactionUIState.summaryViewData?.abs
-    Divider()
-    Text(
-        modifier = Modifier
+	val transactionUIState by ledgerViewModel.transactionUIState.collectAsState()
+	val uiState = ledgerViewModel.uiState.collectAsState()
+	val filters = uiState.value.appliedFilter
+	val abs = transactionUIState.summaryViewData?.abs
+	Divider()
+	Text(
+		modifier = Modifier
             .padding(horizontal = 20.dp)
             .padding(top = 20.dp, bottom = 12.dp),
-        text = stringResource(id = R.string.all_transactions_list),
-        style = textSubHeadingS3(Neutral80)
-    )
+		text = stringResource(id = R.string.all_transactions_list),
+		style = textSubHeadingS3(Neutral80)
+	)
 
-    Divider()
+	Divider()
 
-    AbsBanner(abs, openABSDetailScreen)
+	if (abs?.showBanner.isTrue()) {
+		AbsBanner(abs, ledgerViewModel.ledgerAnalytics,openABSDetailScreen)
+	}
+	Spacer(modifier = Modifier.height(8.dp))
 
-    Spacer(modifier = Modifier.height(8.dp))
+	FilterHeader(filters, onFilterClick)
 
-    FilterHeader(filters, onFilterClick)
-
-    ledgerViewModel.getSelectedDates(filters)?.let {
-        SelectedFilters(
-            text = stringResource(
-                id = R.string.from_to,
-                it.first.toDateMonthYear(),
-                it.second.toDateMonthYear()
-            )
-        )
-    }
+	ledgerViewModel.getSelectedDates(filters)?.let {
+		SelectedFilters(
+			text = stringResource(
+				id = R.string.from_to,
+				it.first.toDateMonthYear(),
+				it.second.toDateMonthYear()
+			)
+		)
+	}
 }
 
 @Composable
 private fun SelectedFilters(text: String) = Text(
-    modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
-    text = text,
-    style = textParagraphT2Highlight(Neutral60)
+	modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+	text = text,
+	style = textParagraphT2Highlight(Neutral60)
 )
