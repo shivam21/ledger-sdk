@@ -36,7 +36,7 @@ class ViewDataMapper @Inject constructor() {
             undeliveredInvoiceAmount = undeliveredInvoiceAmount,
             totalInterestOutstanding = totalInterestOutstanding,
             totalInterestPaid = totalInterestPaid,
-            minimumRepaymentAmount = minimumRepaymentAmount.getRoundedAmountInRupees(),
+            minimumRepaymentAmount = minimumRepaymentAmount,
             hideMinimumRepaymentSection = minimumRepaymentAmount.toDoubleOrZero() <= 0 || repaymentDate == null,
             isOrderingBlocked = minimumRepaymentAmount.toDoubleOrZero() > 0 && overdueAmount.toDoubleOrZero() > overdueCreditLimit.toDoubleOrZero(),
             repaymentDate = repaymentDate.toDateMonthName(),

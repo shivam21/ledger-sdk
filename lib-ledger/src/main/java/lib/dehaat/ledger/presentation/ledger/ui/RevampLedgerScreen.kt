@@ -69,6 +69,7 @@ import lib.dehaat.ledger.resources.textParagraphT2Highlight
 import lib.dehaat.ledger.resources.textSubHeadingS3
 import lib.dehaat.ledger.util.DottedShape
 import lib.dehaat.ledger.util.getAmountInRupeesWithoutDecimal
+import lib.dehaat.ledger.util.toDoubleOrZero
 import moe.tlaster.nestedscrollview.VerticalNestedScrollView
 import moe.tlaster.nestedscrollview.rememberNestedScrollViewState
 
@@ -188,9 +189,9 @@ fun RevampLedgerScreen(
 									OutStandingPaymentView(outstanding.amount)
 								}
 								uiState.summaryViewData?.let {
-									if (it.totalAvailableCreditLimit.toDouble() < 0.0)
+									if (it.totalAvailableCreditLimit.toDoubleOrZero() < 0.0)
 										it.minimumRepaymentAmount?.let {
-											if (it.toDouble() > 0.0) {
+											if (it.toDoubleOrZero() > 0.0) {
 												AvailableCreditLimitNudgeScreen(
 													it.getAmountInRupeesWithoutDecimal()
 												)

@@ -43,6 +43,7 @@ import lib.dehaat.ledger.resources.textButtonB1
 import lib.dehaat.ledger.resources.textCaptionCP1
 import lib.dehaat.ledger.resources.textParagraphT1
 import lib.dehaat.ledger.resources.textParagraphT2
+import lib.dehaat.ledger.util.getRoundedAmountInRupees
 import lib.dehaat.ledger.util.tooltip.ToolTipOffSet
 import lib.dehaat.ledger.util.tooltip.ToolTipScreen
 import lib.dehaat.ledger.util.tooltip.TooltipShape
@@ -125,7 +126,7 @@ fun RepaymentScreen(
 									y = it.boundsInParent().bottomCenter.y
 								)
 							},
-						text = summaryViewData.minimumRepaymentAmount,
+						text = summaryViewData.minimumRepaymentAmount.getRoundedAmountInRupees(),
 						style = textButtonB1(
 							textColor = Neutral90,
 							textDecoration = TextDecoration.Underline

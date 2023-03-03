@@ -18,7 +18,7 @@ data class SummaryViewData(
     val undeliveredInvoiceAmount: String,
     val totalInterestOutstanding: String,
     val totalInterestPaid: String,
-    val minimumRepaymentAmount: String,
+    val minimumRepaymentAmount: String?,
     val repaymentDate: String,
     val isOrderingBlocked: Boolean,
     val hideMinimumRepaymentSection: Boolean,
